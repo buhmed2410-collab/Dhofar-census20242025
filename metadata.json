@@ -1,0 +1,6 @@
+{
+  "name": "Dhofar Population Census",
+  "description": "An interactive statistical dashboard for the Dhofar Governorate Population Census 2024-2025, displaying demographic indicators, pyramids, and healthcare planning metrics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
