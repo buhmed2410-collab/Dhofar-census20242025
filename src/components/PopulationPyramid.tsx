@@ -12,8 +12,17 @@ import {
   OMANI_24,
   OMANI_25,
   NON_OMANI_24,
-  NON_OMANI_25
+  NON_OMANI_25,
+  WILAYAS_AR,
+  WILAYAS_DATA_24,
+  WILAYAS_DATA_25
 } from '../data';
+import {
+  EXACT_OMANI_24_BY_WILAYA,
+  EXACT_NON_OMANI_24_BY_WILAYA,
+  EXACT_OMANI_25_BY_WILAYA,
+  EXACT_NON_OMANI_25_BY_WILAYA
+} from '../data_exact';
 import { Users, User, UserX } from 'lucide-react';
 
 interface PopulationPyramidProps {
@@ -30,13 +39,56 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
 
   const [year, setYear] = useState<YearSelection>('2024');
   const [nationality, setNationality] = useState<DatasetSelection>('tot');
+  const [selectedWilaya, setSelectedWilaya] = useState<string>('all');
+  const percentageBasis = 'gender';
 
-  // Select source array
+  // Select source array (with exact fallback / direct lookup from user's data)
   let sourceData = TOTALS_24;
-  if (year === '2024') {
-    sourceData = nationality === 'tot' ? TOTALS_24 : nationality === 'omn' ? OMANI_24 : NON_OMANI_24;
+  if (selectedWilaya === 'all') {
+    if (year === '2024') {
+      sourceData = nationality === 'tot' ? TOTALS_24 : nationality === 'omn' ? OMANI_24 : NON_OMANI_24;
+    } else {
+      sourceData = nationality === 'tot' ? TOTALS_25 : nationality === 'omn' ? OMANI_25 : NON_OMANI_25;
+    }
   } else {
-    sourceData = nationality === 'tot' ? TOTALS_25 : nationality === 'omn' ? OMANI_25 : NON_OMANI_25;
+    const omaniSource = year === '2024' ? EXACT_OMANI_24_BY_WILAYA : EXACT_OMANI_25_BY_WILAYA;
+    const nonOmaniSource = year === '2024' ? EXACT_NON_OMANI_24_BY_WILAYA : EXACT_NON_OMANI_25_BY_WILAYA;
+
+    const omaniList = omaniSource[selectedWilaya] || [];
+    const nonOmaniList = nonOmaniSource[selectedWilaya] || [];
+
+    const ageGroupsMapped = Array.from({ length: 17 }, (_, i) => {
+      const oVal = omaniList[i] || { male: 0, female: 0 };
+      const nVal = nonOmaniList[i] || { male: 0, female: 0 };
+
+      if (nationality === 'omn') {
+        return {
+          male: oVal.male,
+          female: oVal.female,
+          both: oVal.male + oVal.female
+        };
+      } else if (nationality === 'non') {
+        return {
+          male: nVal.male,
+          female: nVal.female,
+          both: nVal.male + nVal.female
+        };
+      } else {
+        return {
+          male: oVal.male + nVal.male,
+          female: oVal.female + nVal.female,
+          both: oVal.male + nVal.male + oVal.female + nVal.female
+        };
+      }
+    });
+
+    const totalMale = ageGroupsMapped.reduce((acc, curr) => acc + curr.male, 0);
+    const totalFemale = ageGroupsMapped.reduce((acc, curr) => acc + curr.female, 0);
+
+    sourceData = [
+      { male: totalMale, female: totalFemale, both: totalMale + totalFemale },
+      ...ageGroupsMapped
+    ];
   }
 
   // Get only age groups (indexes 1 to 17, as index 0 is ALL)
@@ -47,7 +99,7 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
 
   const totalMale = sourceData[0].male;
   const totalFemale = sourceData[0].female;
-  const grandTotal = sourceData[0].both;
+  const grandTotal = sourceData[0].both || 1;
 
   const datasetNames: Record<DatasetSelection, string> = {
     tot: 'الإجمالي العام',
@@ -78,7 +130,7 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
             }`}
           >
             <Users className="w-5 h-5 flex-shrink-0" />
-            <span>الهرم السكاني التفاعلي لمحافظة ظفار</span>
+            <span>الهرم السكاني التفاعلي</span>
           </h2>
           <p className={`text-[11px] mt-1 ${isMinimal ? 'text-gray-500' : 'opacity-70'}`}>
             مخطط هرمي يوضح توزيع السكان حسب الفئات العمرية والنوع والجنسية لعامي {year} م
@@ -86,15 +138,35 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
         </div>
 
         {/* Selection controllers */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex flex-col gap-1">
+        <div className="flex flex-row items-center gap-3 w-full md:w-auto flex-wrap md:flex-nowrap justify-end" dir="rtl">
+          <div className="flex-1 md:flex-initial flex flex-col gap-1 text-right min-w-[130px]">
+            <span className={`text-[10px] font-semibold mb-0.5 ${isMinimal ? 'text-gray-400' : 'opacity-60'}`}>اختر الولاية:</span>
+            <select
+              value={selectedWilaya}
+              onChange={(e) => setSelectedWilaya(e.target.value)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold font-cairo cursor-pointer outline-none transition-all w-full ${
+                isMinimal
+                  ? 'bg-gray-50 border border-gray-200 text-gray-800 hover:border-gray-300'
+                  : isPulse
+                    ? 'bg-slate-800 border border-cyan-500/30 text-cyan-300 hover:border-cyan-400'
+                    : 'bg-amber-950/40 border border-amber-600/30 text-amber-200 hover:border-amber-500'
+              }`}
+            >
+              <option value="all">كافة الولايات (المحافظة ككل)</option>
+              {WILAYAS_AR.map(wilaya => (
+                <option key={wilaya} value={wilaya}>{wilaya}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex-1 md:flex-initial flex flex-col gap-1 text-right min-w-[100px]">
             <span className={`text-[10px] font-semibold mb-0.5 ${isMinimal ? 'text-gray-400' : 'opacity-60'}`}>اختر السنة:</span>
             <select
               value={year}
               onChange={(e) => setYear(e.target.value as YearSelection)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold font-cairo cursor-pointer outline-none transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold font-cairo cursor-pointer outline-none transition-all w-full ${
                 isMinimal
-                  ? 'bg-gray-50 border border-gray-205 text-gray-800 hover:border-gray-300'
+                  ? 'bg-gray-50 border border-gray-200 text-gray-800 hover:border-gray-300'
                   : isPulse
                     ? 'bg-slate-800 border border-cyan-500/30 text-cyan-300 hover:border-cyan-400'
                     : 'bg-amber-950/40 border border-amber-600/30 text-amber-200 hover:border-amber-500'
@@ -105,14 +177,14 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
             </select>
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="flex-1 md:flex-initial flex flex-col gap-1 text-right min-w-[130px]">
             <span className={`text-[10px] font-semibold mb-0.5 ${isMinimal ? 'text-gray-400' : 'opacity-60'}`}>الفئة السكانية:</span>
             <select
               value={nationality}
               onChange={(e) => setNationality(e.target.value as DatasetSelection)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold font-cairo cursor-pointer outline-none transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold font-cairo cursor-pointer outline-none transition-all w-full ${
                 isMinimal
-                  ? 'bg-gray-50 border border-gray-205 text-gray-800 hover:border-gray-300'
+                  ? 'bg-gray-50 border border-gray-200 text-gray-800 hover:border-gray-300'
                   : isPulse
                     ? 'bg-slate-800 border border-cyan-500/30 text-cyan-300 hover:border-cyan-400'
                     : 'bg-amber-950/40 border border-amber-600/30 text-amber-200 hover:border-amber-500'
@@ -152,14 +224,18 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
       </div>
 
       {/* Grid of Pyramids labels */}
-      <div className="flex justify-between items-center px-2 mb-2 text-xs font-bold opacity-80 select-none">
-        <span className={isMinimal ? 'text-blue-600 flex items-center gap-1' : 'text-cyan-400 flex items-center gap-1'}><User className="w-3.5 h-3.5" /> ذكور (Males)</span>
+      <div className="flex justify-between items-center px-2 mb-2 text-xs font-bold opacity-80 select-none" dir="ltr">
+        <span className={isMinimal ? 'text-blue-600 flex items-center gap-1.5' : 'text-cyan-400 flex items-center gap-1.5'}>
+          <User className="w-3.5 h-3.5" /> ذكور (Males)
+        </span>
         <span className={`text-[11px] ${isMinimal ? 'text-gray-400' : 'opacity-60'}`}>مجموعات الأعمار</span>
-        <span className="text-pink-600 flex items-center gap-1">إناث (Females) <UserX className="w-3.5 h-3.5" /></span>
+        <span className="text-pink-600 flex items-center gap-1.5">
+          إناث (Females) <UserX className="w-3.5 h-3.5" />
+        </span>
       </div>
 
       {/* Responsive Row Blocks */}
-      <div className="flex flex-col gap-1 w-full relative">
+      <div className="flex flex-col gap-1 w-full relative" dir="ltr">
         {[...ageGroupData].reverse().map((row, idx) => {
           const originalIdx = ageGroupData.length - 1 - idx;
           const ageLabel = AGE_GROUPS[originalIdx];
@@ -167,9 +243,14 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
           const malePct = (row.male / maxVal) * 100;
           const femalePct = (row.female / maxVal) * 100;
 
-          // Compute percentages of grand total
+          // Compute percentages of grand total or gender totals
           const mOfTotal = ((row.male / grandTotal) * 100).toFixed(1);
           const fOfTotal = ((row.female / grandTotal) * 100).toFixed(1);
+          const mOfGender = ((row.male / (totalMale || 1)) * 100).toFixed(1);
+          const fOfGender = ((row.female / (totalFemale || 1)) * 100).toFixed(1);
+
+          const maleDisplayPct = mOfGender;
+          const femaleDisplayPct = fOfGender;
 
           return (
             <div key={ageLabel} className={`group flex items-center justify-between w-full h-[22px] px-2 rounded transition-all ${
@@ -181,9 +262,9 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
                   isMinimal ? 'text-gray-750' : 'opacity-60'
                 }`}>
                   {row.male.toLocaleString('en-US')}
-                  <span className={`text-[8px] ml-1 font-bold ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>({mOfTotal}%)</span>
+                  <span className={`text-[8px] ml-1 font-bold ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>({maleDisplayPct}%)</span>
                 </span>
-                <div className="w-full max-w-[170px] h-3.5 flex justify-end">
+                <div className="w-full max-w-[170px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-[440px] xl:max-w-[480px] h-3.5 flex justify-end">
                   <div
                     className={`h-full rounded-l transition-all duration-500 origin-right ${
                       isMinimal
@@ -214,7 +295,7 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
 
               {/* Female Bar (Right - left aligned) */}
               <div className="flex-1 flex items-center justify-start gap-2.5">
-                <div className="w-full max-w-[170px] h-3.5 flex justify-start">
+                <div className="w-full max-w-[170px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-[440px] xl:max-w-[480px] h-3.5 flex justify-start">
                   <div
                     className={`h-full rounded-r transition-all duration-500 origin-left ${
                       isMinimal
@@ -230,7 +311,7 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
                   isMinimal ? 'text-gray-750' : 'opacity-60'
                 }`}>
                   {row.female.toLocaleString('en-US')}
-                  <span className={`text-[8px] mr-1 font-bold ${isMinimal ? 'text-rose-600' : 'text-pink-500'}`}>({fOfTotal}%)</span>
+                  <span className={`text-[8px] mr-1 font-bold ${isMinimal ? 'text-rose-600' : 'text-pink-500'}`}>({femaleDisplayPct}%)</span>
                 </span>
               </div>
             </div>

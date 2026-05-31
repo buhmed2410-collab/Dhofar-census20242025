@@ -546,7 +546,7 @@ export default function App() {
              PAGE 3: POPULATION PYRAMID
            ========================================================================= */}
         {activeTab === 'pyramid' && (
-          <div className="animate-fadeIn max-w-4xl mx-auto">
+          <div className="animate-fadeIn w-full">
             <PopulationPyramid theme={theme} />
           </div>
         )}
