@@ -57,7 +57,7 @@ export const GrowthSimulator: React.FC<GrowthSimulatorProps> = ({ theme }) => {
             <span>محاكي تقدير النمو السكاني المتوقع حتى 2030م</span>
           </h3>
           <p className={`text-[11px] mt-0.5 ${isMinimal ? 'text-gray-500' : 'opacity-70'}`}>
-            توقع التعداد السنوي المستهدف لمحافظة ظفار كمعيار لتخطيط المنشآت الطبية والصحية
+            توقع عدد السكان السنوي المستهدف لمحافظة ظفار كمعيار لتخطيط المنشآت الطبية والصحية
           </p>
         </div>
         <div className={`hidden sm:flex items-center gap-1 text-[10px] px-2 py-1 rounded border ${
@@ -127,7 +127,7 @@ export const GrowthSimulator: React.FC<GrowthSimulatorProps> = ({ theme }) => {
                     : 'bg-gradient-to-b from-[#341804] to-[#1c0d02] border-amber-600/15 hover:border-amber-600/35 shadow-sm'
               }`}
             >
-              <span className={`text-[11px] font-bold block ${isMinimal ? 'text-gray-450' : 'opacity-60'}`}>تعداد {year} م</span>
+              <span className={`text-[11px] font-bold block ${isMinimal ? 'text-gray-450' : 'opacity-60'}`}>السنة {year} م</span>
               <span className={`font-mono text-base md:text-lg font-black block mt-1.5 ${
                 isMinimal ? 'text-gray-900' : isPulse ? 'text-white' : 'text-amber-100'
               }`}>

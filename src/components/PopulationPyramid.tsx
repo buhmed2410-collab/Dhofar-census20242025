@@ -172,8 +172,8 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
                     : 'bg-amber-950/40 border border-amber-600/30 text-amber-200 hover:border-amber-500'
               }`}
             >
-              <option value="2024">تعداد 2024 م</option>
-              <option value="2025">تعداد 2025 م</option>
+              <option value="2024">السنة 2024 م</option>
+              <option value="2025">السنة 2025 م</option>
             </select>
           </div>
 
@@ -201,11 +201,11 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
       {/* Subtitles & Totals */}
       <div className={`grid grid-cols-3 gap-2 text-center py-2.5 px-4 rounded-xl text-xs mb-6 select-none font-medium ${
         isMinimal ? 'bg-gray-50 border border-gray-100 text-gray-900' : 'bg-black/20 text-white'
-      }`}>
+      }`} dir="ltr">
         <div className="flex flex-col items-center">
-          <span className={`text-[10px] font-semibold ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>إجمالي الذكور</span>
-          <span className={`font-mono text-base font-black ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>{totalMale.toLocaleString('en-US')}</span>
-          <span className={`text-[9.5px] mt-0.5 ${isMinimal ? 'text-gray-500' : 'opacity-60'}`}>{((totalMale / grandTotal) * 100).toFixed(1)}%</span>
+          <span className={`text-[10px] font-semibold ${isMinimal ? 'text-pink-600' : 'text-pink-500'}`}>إجمالي الإناث</span>
+          <span className={`font-mono text-base font-black ${isMinimal ? 'text-pink-600' : 'text-pink-500'}`}>{totalFemale.toLocaleString('en-US')}</span>
+          <span className={`text-[9.5px] mt-0.5 ${isMinimal ? 'text-gray-500' : 'opacity-60'}`}>{((totalFemale / grandTotal) * 100).toFixed(1)}%</span>
         </div>
         <div className={`flex flex-col items-center justify-center border-x px-2 ${isMinimal ? 'border-gray-200/50' : 'border-white/5'}`}>
           <span className={`text-[10.5px] font-bold mb-0.5 ${
@@ -214,23 +214,23 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
             {datasetNames[nationality]}
           </span>
           <span className={`font-mono text-lg font-black ${isMinimal ? 'text-gray-900' : 'text-white'}`}>{grandTotal.toLocaleString('en-US')} نسمة</span>
-          <span className={`text-[9.5px] mt-0.5 ${isMinimal ? 'text-gray-500' : 'opacity-60'}`}>إجمالي التعداد ({year})</span>
+          <span className={`text-[9.5px] mt-0.5 ${isMinimal ? 'text-gray-500' : 'opacity-60'}`}>إجمالي السكان للسنة ({year})</span>
         </div>
         <div className="flex flex-col items-center">
-          <span className={`text-[10px] font-semibold ${isMinimal ? 'text-pink-600' : 'text-pink-500'}`}>إجمالي الإناث</span>
-          <span className={`font-mono text-base font-black ${isMinimal ? 'text-pink-600' : 'text-pink-500'}`}>{totalFemale.toLocaleString('en-US')}</span>
-          <span className={`text-[9.5px] mt-0.5 ${isMinimal ? 'text-gray-500' : 'opacity-60'}`}>{((totalFemale / grandTotal) * 100).toFixed(1)}%</span>
+          <span className={`text-[10px] font-semibold ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>إجمالي الذكور</span>
+          <span className={`font-mono text-base font-black ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>{totalMale.toLocaleString('en-US')}</span>
+          <span className={`text-[9.5px] mt-0.5 ${isMinimal ? 'text-gray-500' : 'opacity-60'}`}>{((totalMale / grandTotal) * 100).toFixed(1)}%</span>
         </div>
       </div>
 
       {/* Grid of Pyramids labels */}
       <div className="flex justify-between items-center px-2 mb-2 text-xs font-bold opacity-80 select-none" dir="ltr">
-        <span className={isMinimal ? 'text-blue-600 flex items-center gap-1.5' : 'text-cyan-400 flex items-center gap-1.5'}>
-          <User className="w-3.5 h-3.5" /> ذكور (Males)
+        <span className="text-pink-600 flex items-center gap-1.5">
+          <UserX className="w-3.5 h-3.5" /> إناث (Females)
         </span>
         <span className={`text-[11px] ${isMinimal ? 'text-gray-400' : 'opacity-60'}`}>مجموعات الأعمار</span>
-        <span className="text-pink-600 flex items-center gap-1.5">
-          إناث (Females) <UserX className="w-3.5 h-3.5" />
+        <span className={isMinimal ? 'text-blue-600 flex items-center gap-1.5' : 'text-cyan-400 flex items-center gap-1.5'}>
+          ذكور (Males) <User className="w-3.5 h-3.5" />
         </span>
       </div>
 
@@ -256,24 +256,24 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
             <div key={ageLabel} className={`group flex items-center justify-between w-full h-[22px] px-2 rounded transition-all ${
               isMinimal ? 'hover:bg-gray-100/50' : 'hover:bg-white/5'
             }`}>
-              {/* Male Bar (Left - right aligned) */}
+              {/* Female Bar (Left - right aligned) */}
               <div className="flex-1 flex items-center justify-end gap-2.5">
                 <span className={`font-mono text-[10px] font-medium scale-90 group-hover:scale-100 transition-all ${
                   isMinimal ? 'text-gray-750' : 'opacity-60'
                 }`}>
-                  {row.male.toLocaleString('en-US')}
-                  <span className={`text-[8px] ml-1 font-bold ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>({maleDisplayPct}%)</span>
+                  {row.female.toLocaleString('en-US')}
+                  <span className={`text-[8px] ml-1 font-bold ${isMinimal ? 'text-rose-600' : 'text-pink-500'}`}>({femaleDisplayPct}%)</span>
                 </span>
                 <div className="w-full max-w-[170px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-[440px] xl:max-w-[480px] h-3.5 flex justify-end">
                   <div
                     className={`h-full rounded-l transition-all duration-500 origin-right ${
                       isMinimal
-                        ? 'bg-gradient-to-l from-blue-600 to-blue-400'
+                        ? 'bg-gradient-to-l from-pink-500 to-pink-300'
                         : isHeritage
-                          ? 'bg-gradient-to-l from-blue-700 to-sky-400 brightness-90 group-hover:brightness-110'
-                          : 'bg-gradient-to-l from-cyan-600 to-cyan-400 group-hover:shadow-[0_0_8px_rgba(6,182,212,0.5)]'
+                          ? 'bg-gradient-to-l from-red-700 to-rose-400 brightness-90 group-hover:brightness-110'
+                          : 'bg-gradient-to-l from-pink-600 to-pink-400 group-hover:shadow-[0_0_8px_rgba(244,63,94,0.5)]'
                     }`}
-                    style={{ width: `${Math.max(malePct, 1.5)}%` }}
+                    style={{ width: `${Math.max(femalePct, 1.5)}%` }}
                   />
                 </div>
               </div>
@@ -293,25 +293,25 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
                 </span>
               </div>
 
-              {/* Female Bar (Right - left aligned) */}
+              {/* Male Bar (Right - left aligned) */}
               <div className="flex-1 flex items-center justify-start gap-2.5">
                 <div className="w-full max-w-[170px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-[440px] xl:max-w-[480px] h-3.5 flex justify-start">
                   <div
                     className={`h-full rounded-r transition-all duration-500 origin-left ${
                       isMinimal
-                        ? 'bg-gradient-to-r from-pink-500 to-pink-300'
+                        ? 'bg-gradient-to-r from-blue-600 to-blue-400'
                         : isHeritage
-                          ? 'bg-gradient-to-r from-red-700 to-rose-400 brightness-90 group-hover:brightness-110'
-                          : 'bg-gradient-to-r from-pink-600 to-pink-400 group-hover:shadow-[0_0_8px_rgba(244,63,94,0.5)]'
+                          ? 'bg-gradient-to-r from-blue-700 to-sky-400 brightness-90 group-hover:brightness-110'
+                          : 'bg-gradient-to-r from-cyan-600 to-cyan-400 group-hover:shadow-[0_0_8px_rgba(6,182,212,0.5)]'
                     }`}
-                    style={{ width: `${Math.max(femalePct, 1.5)}%` }}
+                    style={{ width: `${Math.max(malePct, 1.5)}%` }}
                   />
                 </div>
                 <span className={`font-mono text-[10px] font-medium scale-90 group-hover:scale-100 transition-all ${
                   isMinimal ? 'text-gray-750' : 'opacity-60'
                 }`}>
-                  {row.female.toLocaleString('en-US')}
-                  <span className={`text-[8px] mr-1 font-bold ${isMinimal ? 'text-rose-600' : 'text-pink-500'}`}>({femaleDisplayPct}%)</span>
+                  {row.male.toLocaleString('en-US')}
+                  <span className={`text-[8px] mr-1 font-bold ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>({maleDisplayPct}%)</span>
                 </span>
               </div>
             </div>

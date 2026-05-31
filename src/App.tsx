@@ -49,31 +49,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<string>('general');
   const [generalYear, setGeneralYear] = useState<'2024' | '2025' | 'both'>('2024');
 
-  const [summary, setSummary] = useState<string | null>(null);
-  const [isSummaryLoading, setIsSummaryLoading] = useState<boolean>(true);
-  const [summaryError, setSummaryError] = useState<string | null>(null);
-  const [summarySource, setSummarySource] = useState<string>('');
 
-  useEffect(() => {
-    const fetchSummary = async () => {
-      try {
-        setIsSummaryLoading(true);
-        const res = await fetch('/api/demographics-summary');
-        if (!res.ok) {
-          throw new Error('فشل تشغيل خدمة التحليل التنبئي من الخادم.');
-        }
-        const data = await res.json();
-        setSummary(data.summary);
-        setSummarySource(data.source || 'gemini_api');
-      } catch (err: any) {
-        console.error('Error fetching summaries:', err);
-        setSummaryError(err.message || 'حدث خطأ أثناء إجراء التحليل السكاني.');
-      } finally {
-        setIsSummaryLoading(false);
-      }
-    };
-    fetchSummary();
-  }, []);
 
   const isPulse = theme === 'pulse';
   const isMinimal = theme === 'minimal';
@@ -85,7 +61,7 @@ export default function App() {
   const getKpis = () => {
     if (generalYear === '2024') {
       return [
-        { label: 'إجمالي سكان ظفار 2024', val: 529625, desc: 'حسب تعداد منتصف 2024م', key: 'tot' },
+        { label: 'إجمالي سكان ظفار 2024', val: 529625, desc: 'حسب بيانات منتصف 2024م', key: 'tot' },
         { label: 'الذكور (Males)', val: 347843, desc: '65.7% من إجمالي السكان', color: 'text-cyan-400', key: 'm' },
         { label: 'الإناث (Females)', val: 181782, desc: '34.3% من إجمالي السكان', color: 'text-pink-500', key: 'f' },
         { label: 'المواطنون العمانيون', val: 238843, desc: '45.1% من الإجمالي الكلي', color: 'text-emerald-400', key: 'o' },
@@ -96,7 +72,7 @@ export default function App() {
       ];
     } else if (generalYear === '2025') {
       return [
-        { label: 'إجمالي سكان ظفار 2025', val: 532897, desc: 'حسب تعداد منتصف 2025م', key: 'tot' },
+        { label: 'إجمالي سكان ظفار 2025', val: 532897, desc: 'حسب بيانات منتصف 2025م', key: 'tot' },
         { label: 'الذكور (Males)', val: 343110, desc: '64.4% من إجمالي السكان', color: 'text-cyan-400', key: 'm' },
         { label: 'الإناث (Females)', val: 189787, desc: '35.6% من إجمالي السكان', color: 'text-pink-500', key: 'f' },
         { label: 'المواطنون العمانيون', val: 244324, desc: '45.8% من الإجمالي الكلي', color: 'text-emerald-400', key: 'o' },
@@ -221,7 +197,7 @@ export default function App() {
                       : isMinimal ? 'text-gray-600 hover:text-gray-900' : 'opacity-75 hover:opacity-100 text-white'
                   }`}
                 >
-                  تعداد 2024 م
+                  السنة 2024 م
                 </button>
                 <button
                   onClick={() => setGeneralYear('2025')}
@@ -235,7 +211,7 @@ export default function App() {
                       : isMinimal ? 'text-gray-600 hover:text-gray-900' : 'opacity-75 hover:opacity-100 text-white'
                   }`}
                 >
-                  تعداد 2025 م
+                  السنة 2025 م
                 </button>
                 <button
                   onClick={() => setGeneralYear('both')}
@@ -298,94 +274,6 @@ export default function App() {
                   </div>
                 );
               })}
-            </div>
-
-            {/* Gemini Demographic Analysis Panel */}
-            <div
-              className={`p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden my-6 ${
-                isMinimal
-                  ? 'bg-gradient-to-br from-blue-50/40 via-white to-blue-50/10 border-blue-100/80 shadow-sm text-gray-900 shadow-blue-100/10'
-                  : isPulse
-                    ? 'bg-gradient-to-br from-[#0c1a2e]/90 to-[#0f3460]/70 border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] text-cyan-50'
-                    : 'bg-gradient-to-br from-[#1c0d02]/85 to-[#2d1704]/70 border-amber-600/35 shadow-md text-[#f2e8d5]'
-              }`}
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-                <div className="flex items-center gap-2.5 text-right w-full">
-                  <div className={`p-2 rounded-xl shrink-0 ${
-                    isMinimal ? 'bg-blue-100 text-blue-600' : isPulse ? 'bg-cyan-500/15 text-cyan-300' : 'bg-amber-600/20 text-amber-200'
-                  }`}>
-                    <Bot className="w-5 h-5 animate-pulse" />
-                  </div>
-                  <div className="text-right">
-                    <h3 className={`text-sm md:text-base font-black ${
-                      isMinimal ? 'text-gray-950' : isPulse ? 'text-cyan-300 font-sans' : 'text-amber-300 font-amiri'
-                    }`}>
-                      قراءة تحليلية مدعومة بالذكاء الاصطناعي (Gemini 3.5 Flash)
-                    </h3>
-                    <p className={`text-[10px] mt-0.5 ${isMinimal ? 'text-gray-500' : 'opacity-70'}`}>
-                      مسح ديموغرافي مقارن لبيانات تعداد ظفار منتصف عامي {formatNumber(2024)}م و {formatNumber(2025)}م
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5 shrink-0 self-start sm:self-center pr-12 sm:pr-0">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin" style={{ animationDuration: '8s' }} />
-                  <span className={`text-[10.5px] font-black px-2.5 py-0.5 rounded-full ${
-                    isMinimal ? 'bg-blue-50 text-blue-600' : 'bg-black/30 text-cyan-400'
-                  }`}>
-                    تحليلات ذكية
-                  </span>
-                </div>
-              </div>
-
-              {isSummaryLoading ? (
-                <div className="py-6 flex flex-col items-center justify-center gap-3">
-                  <div className="relative">
-                    <div className="w-8 h-8 border-3 border-t-cyan-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
-                    <div className="absolute inset-0 w-8 h-8 border-3 border-cyan-500/10 rounded-full"></div>
-                  </div>
-                  <span className={`text-[11px] font-bold ${isMinimal ? 'text-gray-500' : 'opacity-80'}`}>
-                    يجري استخلاص وتحليل فوارق النمو والمؤشرات السكانية عبر قنوات Gemini...
-                  </span>
-                </div>
-              ) : summaryError ? (
-                <div className={`p-4 rounded-xl border flex gap-3 text-right ${
-                  isMinimal ? 'bg-red-50 border-red-100 text-red-700' : 'bg-red-950/20 border-red-500/20 text-red-300'
-                }`}>
-                  <Info className="w-4.5 h-4.5 shrink-0 mt-0.5" />
-                  <div className="space-y-1 text-right">
-                    <p className="text-xs font-bold">تعذر الاتصال بخدمة تحليل Gemini:</p>
-                    <p className="text-[10.5px] opacity-90">{summaryError}</p>
-                    <button
-                      onClick={() => {
-                        setSummaryError(null);
-                        setIsSummaryLoading(true);
-                        fetch('/api/demographics-summary')
-                          .then(r => r.json())
-                          .then(d => {
-                            setSummary(d.summary);
-                            setSummarySource(d.source || 'gemini_api');
-                            setIsSummaryLoading(false);
-                          })
-                          .catch(() => {
-                            setSummaryError('حدث خطأ أثناء إجراء المحاولة المباشرة لإعادة جلب التقرير.');
-                            setIsSummaryLoading(false);
-                          });
-                      }}
-                      className="text-[10.5px] mt-1.5 font-black underline cursor-pointer hover:opacity-85 block"
-                    >
-                      إعادة المحاولة الآن
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div
-                  className={`text-right text-xs leading-relaxed ${
-                    isMinimal ? 'text-gray-800' : 'text-slate-100'
-                  }`}
-                  dangerouslySetInnerHTML={{ __html: summary || '' }}
-                />
-              )}
             </div>
 
             {/* Graphs row */}
@@ -498,7 +386,7 @@ export default function App() {
                 <h3 className={`text-sm font-bold opacity-85 mb-4 text-right ${
                   isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
                 }`}>
-                  التعداد السكاني الكلي حسب الولايات 2024 م
+                  السكان حسب الولايات - السنة 2024 م
                 </h3>
                 <HorizontalBarChart
                   labels={WILAYAS_AR}
@@ -520,7 +408,7 @@ export default function App() {
                 <h3 className={`text-sm font-bold opacity-85 mb-4 text-right ${
                   isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
                 }`}>
-                  التعداد السكاني الكلي حسب الولايات 2025 م
+                  السكان حسب الولايات - السنة 2025 م
                 </h3>
                 <HorizontalBarChart
                   labels={WILAYAS_AR}
@@ -956,7 +844,7 @@ export default function App() {
                   isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
                 }`}>
                   <Heart className={`w-4.5 h-4.5 text-pink-500 ${isMinimal ? '' : 'animate-pulse'}`} />
-                  <span>الفئات العمرية الصحية الصغرى والمستهدفة (تعداد 2024 م)</span>
+                  <span>الفئات العمرية الصحية الصغرى والمستهدفة (السنة 2024 م)</span>
                 </h3>
                 <div className="h-[250px] flex items-center justify-center">
                   <HorizontalBarChart
