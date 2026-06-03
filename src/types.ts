@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export type ThemeType = 'pulse' | 'heritage' | 'minimal';
+export type ThemeType = 'pulse' | 'minimal';
 
 export interface AgeGenderBoth {
   male: number;

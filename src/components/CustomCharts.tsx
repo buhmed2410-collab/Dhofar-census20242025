@@ -22,6 +22,7 @@ interface GroupedBarChartProps {
   labels: string[];
   datasets: Dataset[];
   height?: number;
+  width?: number;
   theme?: string;
 }
 
@@ -30,12 +31,14 @@ interface HorizontalBarChartProps {
   data: number[];
   colors?: string[];
   height?: number;
+  scrollable?: boolean;
   theme?: string;
 }
 
 interface DoughnutChartProps {
   data: ChartDataItem[];
   height?: number;
+  size?: number;
   innerLabel?: string;
   innerValue?: string;
   theme?: string;
@@ -56,7 +59,7 @@ interface RadarChartProps {
 const formatNumber = (num: number) => num.toLocaleString('en-US');
 
 // ==================== GROUPED BAR CHART ====================
-export const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ labels, datasets, height = 250, theme }) => {
+export const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ labels, datasets, height = 250, width, theme }) => {
   const [hovered, setHovered] = useState<{ label: string; datasetLabel: string; value: number; x: number; y: number } | null>(null);
 
   // Auto-scale
@@ -68,7 +71,7 @@ export const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ labels, datase
   const paddingTop = 30;
   const paddingBottom = 40;
 
-  const chartWidth = 500;
+  const chartWidth = width || (labels.length > 5 ? 800 : 500);
   const chartHeight = height;
 
   const graphWidth = chartWidth - paddingLeft - paddingRight;
@@ -204,6 +207,7 @@ export const HorizontalBarChart: React.FC<HorizontalBarChartProps> = ({
   data,
   colors,
   height = 250,
+  scrollable = true,
   theme
 }) => {
   const [hovered, setHovered] = useState<{ label: string; value: number; x: number; y: number } | null>(null);
@@ -213,7 +217,10 @@ export const HorizontalBarChart: React.FC<HorizontalBarChartProps> = ({
   const isMinimal = theme === 'minimal';
 
   return (
-    <div className="flex flex-col gap-3 w-full pr-1 hide-scrollbar overflow-y-auto" style={{ maxHeight: `${height}px` }}>
+    <div 
+      className={`flex flex-col gap-3 w-full pr-1 ${scrollable ? 'hide-scrollbar overflow-y-auto' : ''}`} 
+      style={scrollable ? { maxHeight: `${height}px` } : undefined}
+    >
       {labels.map((lbl, idx) => {
         const val = data[idx] || 0;
         const pct = (val / maxValue) * 100;
@@ -270,18 +277,21 @@ export const HorizontalBarChart: React.FC<HorizontalBarChartProps> = ({
 };
 
 // ==================== DOUGHNUT CHART ====================
-export const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, height = 200, innerLabel, innerValue, theme }) => {
+export const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, height = 200, size = 180, innerLabel, innerValue, theme }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [clickedIndex, setClickedIndex] = useState<number | null>(null);
 
   const total = data.reduce((sum, item) => sum + item.value, 0);
   const defaultColors = ['#00b4d8', '#f72585', '#06d6a0', '#ffd166', '#a29bfe', '#74b9ff', '#e040fb', '#ffeaa7'];
   const isMinimal = theme === 'minimal';
 
-  // Circle dimensions
-  const size = 180;
+  // Highlight index is either hovered or clicked
+  const activeIdx = activeIndex !== null ? activeIndex : clickedIndex;
+
+  // Circle dimensions dynamically calculated from the size parameter
   const center = size / 2;
-  const radius = 60;
-  const strokeWidth = 22;
+  const radius = (size / 2) - 30;
+  const strokeWidth = Math.round(size * 0.12);
   const circumference = 2 * Math.PI * radius;
 
   let currentOffset = 0;
@@ -301,6 +311,40 @@ export const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, height = 200
             strokeWidth={strokeWidth}
           />
 
+          {/* Dynamic Fill Color Circle representing percentage on selection/click */}
+          {activeIdx !== null && (() => {
+            const pctVal = (data[activeIdx].value / (total || 1)) * 100;
+            const itemLabel = data[activeIdx].label;
+            const isMale = itemLabel.includes('ذكور') || itemLabel.includes('الذكور');
+            
+            // Choose the aesthetic color based on gender & value percentage
+            let fillCol = 'transparent';
+            if (isMale) {
+              // Males (e.g. 64% - 66%)
+              fillCol = isMinimal 
+                ? `rgba(37, 99, 235, ${0.04 + (pctVal / 500)})` 
+                : `rgba(0, 229, 255, ${0.08 + (pctVal / 400)})`;
+            } else {
+              // Females (e.g. 34% - 36%)
+              fillCol = isMinimal 
+                ? `rgba(219, 39, 119, ${0.04 + (pctVal / 500)})` 
+                : `rgba(255, 0, 127, ${0.08 + (pctVal / 400)})`;
+            }
+
+            return (
+              <circle
+                cx={center}
+                cy={center}
+                r={radius - strokeWidth / 2}
+                fill={fillCol}
+                className="transition-all duration-500 ease-out animate-pulse"
+                style={{
+                  filter: isMinimal ? 'none' : 'blur(4px)',
+                }}
+              />
+            );
+          })()}
+
           {/* Individual Segment Rings */}
           {data.map((item, idx) => {
             const pct = item.value / (total || 1);
@@ -309,7 +353,7 @@ export const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, height = 200
             currentOffset += strokeLength;
 
             const color = item.color || defaultColors[idx % defaultColors.length];
-            const isHovered = activeIndex === idx;
+            const isSelected = activeIdx === idx;
 
             return (
               <circle
@@ -319,14 +363,18 @@ export const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, height = 200
                 r={radius}
                 fill="transparent"
                 stroke={color}
-                strokeWidth={isHovered ? strokeWidth + 4 : strokeWidth}
+                strokeWidth={isSelected ? strokeWidth + 5 : strokeWidth}
                 strokeDasharray={`${strokeLength} ${circumference}`}
                 strokeDashoffset={strokeOffset}
                 transform={`rotate(-90 ${center} ${center})`}
                 className="transition-all duration-300 cursor-pointer origin-center"
-                style={{ strokeLinecap: 'butt' }}
+                style={{ 
+                  strokeLinecap: 'butt',
+                  filter: isSelected ? (isMinimal ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' : `drop-shadow(0 0 6px ${color})`) : 'none'
+                }}
                 onMouseEnter={() => setActiveIndex(idx)}
                 onMouseLeave={() => setActiveIndex(null)}
+                onClick={() => setClickedIndex(clickedIndex === idx ? null : idx)}
               />
             );
           })}
@@ -334,16 +382,16 @@ export const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, height = 200
 
         {/* Center Labels */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-          {activeIndex !== null ? (
+          {activeIdx !== null ? (
             <>
               <span className={`text-[10px] truncate max-w-[110px] font-semibold ${isMinimal ? 'text-gray-500' : 'opacity-75'}`}>
-                {data[activeIndex].label}
+                {data[activeIdx].label}
               </span>
               <span className={`font-mono text-base font-black ${isMinimal ? 'text-gray-900' : 'text-white'}`}>
-                {((data[activeIndex].value / (total || 1)) * 100).toFixed(1)}%
+                {((data[activeIdx].value / (total || 1)) * 100).toFixed(1)}%
               </span>
               <span className={`font-mono text-[9px] ${isMinimal ? 'text-gray-400' : 'opacity-60'}`}>
-                {formatNumber(data[activeIndex].value)}
+                {formatNumber(data[activeIdx].value)}
               </span>
             </>
           ) : (
@@ -351,7 +399,7 @@ export const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, height = 200
               <span className={`text-[11px] font-semibold ${isMinimal ? 'text-gray-500' : 'opacity-75'}`}>
                 {innerLabel || 'الإجمالي'}
               </span>
-              <span className={`font-mono text-sm font-black tracking-wider ${isMinimal ? 'text-gray-900' : 'text-slate-100'}`}>
+              <span className={`font-mono text-xs sm:text-sm font-black tracking-wider ${isMinimal ? 'text-gray-900' : 'text-slate-100'}`}>
                 {innerValue || formatNumber(total)}
               </span>
             </>
@@ -360,27 +408,34 @@ export const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, height = 200
       </div>
 
       {/* Legend Column list */}
-      <div className="flex flex-col gap-2 max-h-[160px] overflow-y-auto pr-1 hide-scrollbar select-none text-xs w-[140px]">
+      <div className={`grid ${data.length > 2 ? 'grid-cols-2 min-w-[260px]' : 'grid-cols-2 min-w-[150px]'} gap-x-4 gap-y-1.5 select-none text-[11px] max-w-full shrink-0`}>
         {data.map((item, idx) => {
           const color = item.color || defaultColors[idx % defaultColors.length];
           const pct = ((item.value / (total || 1)) * 100).toFixed(1);
-          const isSelected = activeIndex === idx;
+          const isSelected = activeIdx === idx;
 
           return (
             <div
               key={idx}
-              className={`flex items-center gap-2 transition-all p-1 rounded-md cursor-pointer ${
+              className={`flex items-center gap-2 transition-all p-1.5 rounded-md cursor-pointer ${
                 isSelected
-                  ? isMinimal ? 'bg-gray-150 scale-105 border border-gray-250/20' : 'bg-white/10 scale-105'
+                  ? isMinimal ? 'bg-gray-150 scale-105 border border-gray-200' : 'bg-white/10 scale-105 font-bold'
                   : isMinimal ? 'hover:bg-gray-100/50' : 'hover:bg-white/5'
               }`}
               onMouseEnter={() => setActiveIndex(idx)}
               onMouseLeave={() => setActiveIndex(null)}
+              onClick={() => setClickedIndex(clickedIndex === idx ? null : idx)}
             >
-              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
+              <div 
+                className={`w-2.5 h-2.5 rounded-full flex-shrink-0 transition-transform ${isSelected ? 'scale-125' : ''}`} 
+                style={{ 
+                  backgroundColor: color,
+                  boxShadow: isSelected && !isMinimal ? `0 0 8px ${color}` : 'none'
+                }} 
+              />
               <div className="flex flex-col truncate">
-                <span className={`font-medium truncate max-w-[100px] leading-tight ${isMinimal ? 'text-gray-800' : 'text-white'}`}>{item.label}</span>
-                <span className={`text-[9px] font-mono mt-0.5 ${isMinimal ? 'text-gray-500' : 'opacity-70'}`}>{pct}% ({formatNumber(item.value)})</span>
+                <span className={`font-medium truncate max-w-[110px] leading-tight ${isMinimal ? 'text-gray-800' : 'text-white'}`}>{item.label}</span>
+                <span className={`text-[9.5px] font-mono mt-0.5 ${isMinimal ? 'text-gray-500' : 'opacity-70'}`}>{pct}% ({formatNumber(item.value)})</span>
               </div>
             </div>
           );

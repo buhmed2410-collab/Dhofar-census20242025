@@ -12,7 +12,6 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ theme }) => {
   const isPulse = theme === 'pulse';
-  const isHeritage = theme === 'heritage';
   const isMinimal = theme === 'minimal';
 
   return (
@@ -21,20 +20,9 @@ export const Header: React.FC<HeaderProps> = ({ theme }) => {
       className={`relative mt-8 mx-4 md:mx-8 px-6 py-6 md:py-8 rounded-2xl transition-all duration-500 overflow-hidden text-center md:text-right ${
         isMinimal
           ? 'bg-slate-50/80 border border-slate-100 shadow-sm backdrop-blur-md'
-          : isPulse
-            ? 'bg-gradient-to-r from-[#0d1b2a] via-[#112240] to-[#162a45] border-b-2 border-cyan-400/90 shadow-[0_10px_35px_rgba(6,182,212,0.15)]'
-            : 'bg-gradient-to-r from-[#2a1305] via-[#421d0a] to-[#1a0a00] border-b-4 border-amber-600/90 shadow-[0_10px_35px_rgba(217,119,6,0.15)]'
+          : 'bg-gradient-to-r from-[#0d1b2a] via-[#112240] to-[#162a45] border-b-2 border-cyan-400/90 shadow-[0_10px_35px_rgba(6,182,212,0.15)]'
       }`}
     >
-      {/* Decorative Traditional Border Detail for Heritage Mode */}
-      {isHeritage && (
-        <div
-          className="absolute top-0 left-0 right-0 h-1.5"
-          style={{
-            background: `repeating-linear-gradient(90deg, #c9a84c 0px, #c9a84c 20px, #6b4f1a 20px, #6b4f1a 40px)`
-          }}
-        />
-      )}
 
       {/* Futuristic Background Overlay in Pulse Mode */}
       {isPulse && (

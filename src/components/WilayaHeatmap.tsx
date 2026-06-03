@@ -15,7 +15,6 @@ interface WilayaHeatmapProps {
 
 export const WilayaHeatmap: React.FC<WilayaHeatmapProps> = ({ theme, year }) => {
   const isPulse = theme === 'pulse';
-  const isHeritage = theme === 'heritage';
   const isMinimal = theme === 'minimal';
 
   // Use correct year dataset
@@ -27,7 +26,7 @@ export const WilayaHeatmap: React.FC<WilayaHeatmapProps> = ({ theme, year }) => 
 
   return (
     <div
-      id="wilaya-heatmap-section"
+      id={`wilaya-heatmap-section-${year}`}
       className={`p-6 rounded-2xl border transition-all duration-300 ${
         isMinimal
           ? 'bg-white border-gray-100 shadow-sm text-gray-900'
@@ -48,7 +47,7 @@ export const WilayaHeatmap: React.FC<WilayaHeatmapProps> = ({ theme, year }) => 
             }`}
           >
             <Map className={`w-5 h-5 flex-shrink-0 ${isMinimal ? 'text-blue-650' : ''}`} />
-            <span>الخريطة الحرارية الإحصائية لتوزيع السكان بالولايات</span>
+            <span>الخريطة الحرارية لتوزيع السكان</span>
           </h3>
           <p className={`text-[11px] mt-0.5 ${isMinimal ? 'text-gray-500' : 'opacity-70'}`}>
             تأثير التوزيع السكاني لولايات ظفار كدليل بصري لتركيز الكثافات السكانية ({year} م)
@@ -56,7 +55,7 @@ export const WilayaHeatmap: React.FC<WilayaHeatmapProps> = ({ theme, year }) => 
         </div>
         <div className={`flex items-center gap-1 text-[10.5px] justify-end ${isMinimal ? 'text-gray-500' : 'opacity-75'}`}>
           <Info className={`w-4 h-4 flex-shrink-0 ${isMinimal ? 'text-blue-600' : 'text-amber-500'}`} />
-          <span>شدة اللون تشير للتوزع النسبي قياساً بصلالة العاصمة</span>
+          <span>شدة اللون تشير للتوزع النسبي قياساً بصلالة</span>
         </div>
       </div>
 
@@ -72,9 +71,7 @@ export const WilayaHeatmap: React.FC<WilayaHeatmapProps> = ({ theme, year }) => 
           // isHeritage: rgba(Math.round(80 + 175 * inten), Math.round(70 * inten), 0, 0.25 + 0.75 * inten)
           const bg = isMinimal
             ? `rgba(37, 99, 235, ${0.08 + 0.92 * intensity})`
-            : isPulse
-              ? `rgba(0, ${Math.round(80 + 175 * intensity)}, ${Math.round(210 - 100 * intensity)}, ${0.25 + 0.75 * intensity})`
-              : `rgba(${Math.round(80 + 175 * intensity)}, ${Math.round(110 * intensity)}, 0, ${0.25 + 0.75 * intensity})`;
+            : `rgba(0, ${Math.round(80 + 175 * intensity)}, ${Math.round(210 - 100 * intensity)}, ${0.25 + 0.75 * intensity})`;
 
           const textColorClass = isMinimal
             ? (intensity > 0.4 ? 'text-white' : 'text-gray-900')
@@ -82,19 +79,40 @@ export const WilayaHeatmap: React.FC<WilayaHeatmapProps> = ({ theme, year }) => 
 
           const borderStyle = isMinimal
             ? `rgba(37, 99, 235, 0.18)`
-            : isPulse
-              ? 'rgba(0, 180, 216, 0.35)'
-              : 'rgba(201, 168, 76, 0.35)';
+            : 'rgba(0, 180, 216, 0.35)';
 
           return (
             <div
               key={w.name}
-              className="group p-4 rounded-xl text-center cursor-pointer transition-all duration-300 transform hover:scale-[1.04] hover:shadow-md flex flex-col justify-between min-h-[95px]"
+              className="group p-4 rounded-xl text-center cursor-pointer transition-all duration-300 transform hover:scale-[1.04] hover:shadow-md flex flex-col justify-between min-h-[95px] relative"
               style={{
                 backgroundColor: bg,
                 border: `1px solid ${borderStyle}`,
               }}
             >
+              {/* Interactive Instant Pop-up Tooltip */}
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max hidden group-hover:flex flex-col items-center pointer-events-none z-50 animate-fadeIn">
+                <div className={`px-3 py-2 rounded-lg shadow-2xl text-center text-xs border ${
+                  isMinimal 
+                    ? 'bg-slate-900 text-white border-slate-800' 
+                    : isPulse
+                      ? 'bg-slate-950 text-cyan-200 border-cyan-500/40 shadow-cyan-950/50'
+                      : 'bg-stone-950 text-amber-200 border-amber-600/30 shadow-stone-950/50'
+                }`}>
+                  <div className="font-black text-white text-xs border-b border-white/5 pb-1 mb-1">{w.name}</div>
+                  <div className="font-bold font-mono text-[10.5px] text-emerald-400">التوزيع السكاني: {pctOfTotal}%</div>
+                  <div className="font-mono text-[9px] opacity-75 mt-0.5">العدد الإجمالي: {v.toLocaleString('en-US')} نسمة</div>
+                </div>
+                {/* Pointer Arrow */}
+                <div className={`w-2 h-2 rotate-45 -mt-1 ${
+                  isMinimal 
+                    ? 'bg-slate-900 border-r border-b border-slate-800' 
+                    : isPulse
+                      ? 'bg-slate-950 border-r border-b border-cyan-500/40'
+                      : 'bg-stone-950 border-r border-b border-amber-600/30'
+                }`} />
+              </div>
+
               <div
                 className={`text-xs font-black truncate leading-tight transition-all group-hover:scale-105 ${textColorClass}`}
               >

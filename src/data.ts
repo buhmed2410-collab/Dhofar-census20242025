@@ -336,3 +336,66 @@ export const HEALTH_GROUPS_24: HealthTargetGroup[] = [
     note: '0.8% من الإجمالي'
   }
 ];
+
+export const HEALTH_GROUPS_25: HealthTargetGroup[] = [
+  {
+    id: 'infants',
+    titleAr: 'الرضع (Infants)',
+    titleEn: 'Under 1 Year',
+    range: 'أقل من سنة | Under 1 year',
+    icon: '👶',
+    count: 8004,
+    percentage: 1.5,
+    note: '~1.5% من الإجمالي (تقديري)'
+  },
+  {
+    id: 'under5',
+    titleAr: 'الأطفال دون سن 5',
+    titleEn: 'Children Under 5',
+    range: '0-4 سنوات',
+    icon: '🧒',
+    count: 39483,
+    percentage: 7.4,
+    note: '7.4% من الإجمالي'
+  },
+  {
+    id: 'students',
+    titleAr: 'اليافعون وطلاب المدارس',
+    titleEn: 'School Youth',
+    range: '5-14 سنة',
+    icon: '📚',
+    count: 81536,
+    percentage: 15.3,
+    note: '15.3% من الإجمالي'
+  },
+  {
+    id: 'reproductive',
+    titleAr: 'النساء في سن الإنجاب',
+    titleEn: 'Women of Reproductive Age',
+    range: '15-49 سنة (إناث)',
+    icon: '👩',
+    count: 107934,
+    percentage: 20.3,
+    note: '20.3% من الإجمالي'
+  },
+  {
+    id: 'older',
+    titleAr: 'كبار السن',
+    titleEn: 'Older Adults',
+    range: '60-74 سنة',
+    icon: '👴',
+    count: 20830,
+    percentage: 3.9,
+    note: '3.9% من الإجمالي'
+  },
+  {
+    id: 'seniors',
+    titleAr: 'المسنون',
+    titleEn: 'Seniors',
+    range: '75+ سنة',
+    icon: '🧓',
+    count: 4498,
+    percentage: 0.8,
+    note: '0.8% من الإجمالي'
+  }
+];

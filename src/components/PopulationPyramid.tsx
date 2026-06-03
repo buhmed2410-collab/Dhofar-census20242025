@@ -34,7 +34,6 @@ type YearSelection = '2024' | '2025';
 
 export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) => {
   const isPulse = theme === 'pulse';
-  const isHeritage = theme === 'heritage';
   const isMinimal = theme === 'minimal';
 
   const [year, setYear] = useState<YearSelection>('2024');
@@ -269,9 +268,7 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
                     className={`h-full rounded-l transition-all duration-500 origin-right ${
                       isMinimal
                         ? 'bg-gradient-to-l from-pink-500 to-pink-300'
-                        : isHeritage
-                          ? 'bg-gradient-to-l from-red-700 to-rose-400 brightness-90 group-hover:brightness-110'
-                          : 'bg-gradient-to-l from-pink-600 to-pink-400 group-hover:shadow-[0_0_8px_rgba(244,63,94,0.5)]'
+                        : 'bg-gradient-to-l from-pink-600 to-pink-400 group-hover:shadow-[0_0_8px_rgba(244,63,94,0.5)]'
                     }`}
                     style={{ width: `${Math.max(femalePct, 1.5)}%` }}
                   />
@@ -284,9 +281,7 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
                   className={`text-[11px] font-bold tracking-wider px-2 py-0.5 rounded ${
                     isMinimal
                       ? 'text-blue-600 bg-blue-50'
-                      : isPulse
-                        ? 'text-cyan-200 bg-cyan-950/20'
-                        : 'text-amber-100 bg-amber-950/15 font-amiri'
+                      : 'text-cyan-200 bg-cyan-950/20'
                   }`}
                 >
                   {ageLabel}
@@ -300,9 +295,7 @@ export const PopulationPyramid: React.FC<PopulationPyramidProps> = ({ theme }) =
                     className={`h-full rounded-r transition-all duration-500 origin-left ${
                       isMinimal
                         ? 'bg-gradient-to-r from-blue-600 to-blue-400'
-                        : isHeritage
-                          ? 'bg-gradient-to-r from-blue-700 to-sky-400 brightness-90 group-hover:brightness-110'
-                          : 'bg-gradient-to-r from-cyan-600 to-cyan-400 group-hover:shadow-[0_0_8px_rgba(6,182,212,0.5)]'
+                        : 'bg-gradient-to-r from-cyan-600 to-cyan-400 group-hover:shadow-[0_0_8px_rgba(6,182,212,0.5)]'
                     }`}
                     style={{ width: `${Math.max(malePct, 1.5)}%` }}
                   />

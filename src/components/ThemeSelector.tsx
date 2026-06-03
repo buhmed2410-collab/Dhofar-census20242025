@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { ThemeType } from '../types';
-import { Zap, Landmark, Sparkles } from 'lucide-react';
+import { Zap, Sparkles } from 'lucide-react';
 
 interface ThemeSelectorProps {
   currentTheme: ThemeType;
@@ -41,7 +41,7 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ currentTheme, onCh
         </button>
         <button
           onClick={() => onChange('pulse')}
-          className={`flex items-center gap-1.5 px-5 py-1.5 cursor-pointer text-xs font-semibold transition-all duration-300 ${
+          className={`flex items-center gap-1.5 px-5 py-1.5 cursor-pointer text-xs font-semibold transition-all duration-300 rounded-r-md ${
             currentTheme === 'pulse'
               ? 'bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.6)] font-bold'
               : isMinimal
@@ -52,20 +52,6 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ currentTheme, onCh
         >
           <Zap className="w-3.5 h-3.5" />
           <span>⚡ النمط النابض</span>
-        </button>
-        <button
-          onClick={() => onChange('heritage')}
-          className={`flex items-center gap-1.5 px-5 py-1.5 cursor-pointer text-xs font-semibold transition-all duration-300 rounded-r-md ${
-            currentTheme === 'heritage'
-              ? 'bg-amber-600 text-[#1a0a00] shadow-[0_0_15px_rgba(217,119,6,0.6)] font-bold'
-              : isMinimal
-                ? 'text-gray-600 hover:bg-gray-200/50'
-                : 'text-amber-500 hover:bg-amber-950/30'
-          }`}
-          id="btn-theme-heritage"
-        >
-          <Landmark className="w-3.5 h-3.5" />
-          <span>🏛️ النمط التراثي</span>
         </button>
       </div>
     </div>

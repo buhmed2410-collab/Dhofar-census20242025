@@ -11,6 +11,7 @@ import { PopulationPyramid } from './components/PopulationPyramid';
 import { GrowthSimulator } from './components/GrowthSimulator';
 import { WilayaHeatmap } from './components/WilayaHeatmap';
 import { WilayaCompare } from './components/WilayaCompare';
+import { HealthPlanningDetails } from './components/HealthPlanningDetails';
 import {
   WILAYAS_AR,
   WILAYAS_DATA_24,
@@ -21,7 +22,8 @@ import {
   OMANI_25,
   NON_OMANI_24,
   NON_OMANI_25,
-  HEALTH_GROUPS_24
+  HEALTH_GROUPS_24,
+  HEALTH_GROUPS_25
 } from './data';
 import {
   GroupedBarChart,
@@ -114,9 +116,7 @@ export default function App() {
       className={`min-h-screen transition-colors duration-500 flex flex-col pb-10 ${
         theme === 'minimal'
           ? 'theme-minimal text-[#1e293b] font-sans'
-          : theme === 'pulse'
-            ? 'theme-pulse text-[#e0f7fa]'
-            : 'theme-heritage text-[#f2e8d5]'
+          : 'theme-pulse text-[#e0f7fa]'
       }`}
     >
       {/* 1. Theme Toggle Top Bar */}
@@ -445,7 +445,7 @@ export default function App() {
         {activeTab === 'wilayat' && (
           <div className="space-y-6 animate-fadeIn">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Density chart */}
+              {/* Share Pie distribution - 2024 */}
               <div
                 className={`p-5 rounded-2xl border ${
                   isMinimal
@@ -456,31 +456,9 @@ export default function App() {
                 <h3 className={`text-sm font-bold opacity-85 mb-4 text-right ${
                   isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
                 }`}>
-                  نسبة توزع الطاقات العددية حسب الولايات لعام 2024 م
+                  التوزيع النسبي للسكان لعام 2024 م
                 </h3>
-                <HorizontalBarChart
-                  labels={WILAYAS_AR}
-                  data={WILAYAS_DATA_24.map(w => w.total.both)}
-                  colors={isMinimal ? ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd'] : isPulse ? undefined : ['#c9a84c', '#85c1e9', '#06d6a0']}
-                  height={270}
-                  theme={theme}
-                />
-              </div>
-
-              {/* Share Pie distribution */}
-              <div
-                className={`p-5 rounded-2xl border ${
-                  isMinimal
-                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
-                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
-                }`}
-              >
-                <h3 className={`text-sm font-bold opacity-85 mb-4 text-right ${
-                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
-                }`}>
-                  الحصة السكانية المئوية لولاية كل صنف لتوليفة المحافظة (2024 م)
-                </h3>
-                <div className="h-[240px] flex items-center justify-center">
+                <div className="min-h-[250px] py-2 flex items-center justify-center">
                   <DoughnutChart
                     data={WILAYAS_DATA_24.map((w, idx) => ({
                       label: w.name,
@@ -497,10 +475,44 @@ export default function App() {
                   />
                 </div>
               </div>
+
+              {/* Share Pie distribution - 2025 */}
+              <div
+                className={`p-5 rounded-2xl border ${
+                  isMinimal
+                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+                }`}
+              >
+                <h3 className={`text-sm font-bold opacity-85 mb-4 text-right ${
+                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
+                }`}>
+                  التوزيع النسبي للسكان لعام 2025 م
+                </h3>
+                <div className="min-h-[250px] py-2 flex items-center justify-center">
+                  <DoughnutChart
+                    data={WILAYAS_DATA_25.map((w, idx) => ({
+                      label: w.name,
+                      value: w.total.both,
+                      color: isMinimal
+                        ? `hsl(${210 + idx * 12}, 75%, ${46 - idx * 2}%)`
+                        : isPulse
+                          ? `hsl(${200 + idx * 16}, 80%, ${50 - idx * 1.5}%)`
+                          : `hsl(${35 + idx * 24}, 65%, ${40 - idx * 1}%)`
+                    }))}
+                    innerLabel="محافظة ظفار الهيكلية"
+                    innerValue="532,897 نسمة"
+                    theme={theme}
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Custom Heatmap Grid Representation */}
+            {/* Custom Heatmap Grid Representation for 2024 */}
             <WilayaHeatmap theme={theme} year="2024" />
+
+            {/* Custom Heatmap Grid Representation for 2025 */}
+            <WilayaHeatmap theme={theme} year="2025" />
           </div>
         )}
 
@@ -509,25 +521,27 @@ export default function App() {
            ========================================================================= */}
         {activeTab === 'gender' && (
           <div className="space-y-6 animate-fadeIn">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Doughnut charts row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Ratio 24 */}
               <div
                 className={`p-5 rounded-2xl border text-center ${
                   isMinimal
-                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                    ? 'bg-white border-gray-100 shadow-sm text-gray-955'
                     : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
                 }`}
               >
-                <h3 className={`text-xs font-bold opacity-80 mb-4 ${
-                  isMinimal ? 'text-gray-500' : isPulse ? 'text-cyan-400' : 'text-amber-500'
+                <h3 className={`text-md font-bold mb-4 ${
+                  isMinimal ? 'text-blue-650' : isPulse ? 'text-cyan-400' : 'text-amber-500'
                 }`}>
-                  أنساب وأوزان الجنس لعام 2024 م
+                  التوزيع حسب النوع لعام 2024 م
                 </h3>
-                <div className="h-[200px] flex items-center justify-center">
+                <div className="h-[270px] flex items-center justify-center">
                   <DoughnutChart
+                    size={230}
                     data={[
-                      { label: 'الذكور', value: 347843, color: '#3b82f6' },
-                      { label: 'الإناث', value: 181782, color: '#f43f5e' }
+                      { label: 'الذكور', value: 347843, color: isMinimal ? '#2563eb' : isPulse ? '#00e5ff' : '#3b82f6' },
+                      { label: 'الإناث', value: 181782, color: isMinimal ? '#db2777' : isPulse ? '#ff007f' : '#f43f5e' }
                     ]}
                     innerLabel="عام 2024"
                     innerValue="529,625"
@@ -540,20 +554,21 @@ export default function App() {
               <div
                 className={`p-5 rounded-2xl border text-center ${
                   isMinimal
-                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                    ? 'bg-white border-gray-100 shadow-sm text-gray-955'
                     : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
                 }`}
               >
-                <h3 className={`text-xs font-bold opacity-80 mb-4 ${
-                  isMinimal ? 'text-gray-500' : isPulse ? 'text-cyan-400' : 'text-amber-500'
+                <h3 className={`text-md font-bold mb-4 ${
+                  isMinimal ? 'text-blue-655' : isPulse ? 'text-cyan-400' : 'text-amber-500'
                 }`}>
-                  أنساب وأوزان الجنس لعام 2025 م
+                  التوزيع حسب النوع لعام 2025 م
                 </h3>
-                <div className="h-[200px] flex items-center justify-center">
+                <div className="h-[270px] flex items-center justify-center">
                   <DoughnutChart
+                    size={230}
                     data={[
-                      { label: 'الذكور', value: 343110, color: '#3b82f6' },
-                      { label: 'الإناث', value: 189787, color: '#f43f5e' }
+                      { label: 'الذكور', value: 343110, color: isMinimal ? '#2563eb' : isPulse ? '#00e5ff' : '#3b82f6' },
+                      { label: 'الإناث', value: 189787, color: isMinimal ? '#db2777' : isPulse ? '#ff007f' : '#f43f5e' }
                     ]}
                     innerLabel="عام 2025"
                     innerValue="532,897"
@@ -561,39 +576,58 @@ export default function App() {
                   />
                 </div>
               </div>
+            </div>
 
-              {/* Sex index metrics bar */}
-              <div
-                className={`p-5 rounded-2xl border ${
-                  isMinimal
-                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
-                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
-                }`}
-              >
-                <h3 className={`text-xs font-bold opacity-80 mb-4 text-right ${
-                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
+            {/* Sex index metrics bar (spans col-span-full) */}
+            <div
+              className={`p-6 rounded-2xl border ${
+                isMinimal
+                  ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                  : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+              }`}
+            >
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <h3 className={`text-md font-bold ${
+                  isMinimal ? 'text-blue-650' : isPulse ? 'text-cyan-400' : 'text-amber-500'
                 }`}>
                   نسبة الذكورة (مؤشر الذكور لكل 100 أنثى)
                 </h3>
-                <div className="h-[200px] flex items-center justify-center">
-                  <GroupedBarChart
-                    labels={['عماني 24', 'وافد 24', 'إجمالي 24', 'عماني 25', 'وافد 25', 'إجمالي 25']}
-                    datasets={[
-                      {
-                        label: 'معدل الذكورة لكل 100 أنثى',
-                        data: [102.2, 356.8, 191.4, 102.3, 318.2, 180.8],
-                        color: isMinimal ? '#2563eb' : isPulse ? '#00b4d8' : '#c9a84c'
-                      }
-                    ]}
-                    theme={theme}
-                  />
+                {/* Year indicators Legend */}
+                <div className="flex justify-end gap-5 text-xs select-none">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3.5 h-3.5 rounded animate-pulse" style={{ backgroundColor: isMinimal ? '#2563eb' : isPulse ? '#00e5ff' : '#3b82f6' }} />
+                    <span className={isMinimal ? 'text-gray-600' : 'text-gray-300'}>عام 2024 م</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3.5 h-3.5 rounded animate-pulse" style={{ backgroundColor: isMinimal ? '#0d9488' : isPulse ? '#ff007f' : '#10b981' }} />
+                    <span className={isMinimal ? 'text-gray-600' : 'text-gray-300'}>عام 2025 م</span>
+                  </div>
                 </div>
+              </div>
+              <div className="h-[360px]">
+                <GroupedBarChart
+                  height={360}
+                  labels={['عمانيون', 'وافدون', 'المجموع الكلي']}
+                  datasets={[
+                    {
+                      label: 'عام 2024 م',
+                      data: [102.2, 356.8, 191.4],
+                      color: isMinimal ? '#2563eb' : isPulse ? '#00e5ff' : '#3b82f6'
+                    },
+                    {
+                      label: 'عام 2025 م',
+                      data: [102.3, 318.2, 180.8],
+                      color: isMinimal ? '#0d9488' : isPulse ? '#ff007f' : '#10b981'
+                    }
+                  ]}
+                  theme={theme}
+                />
               </div>
             </div>
 
-            {/* Split totals layout block */}
+            {/* Split totals layout block for 2024 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Male distribution */}
+              {/* Male distribution 2024 */}
               <div
                 className={`p-5 rounded-2xl border ${
                   isMinimal
@@ -601,21 +635,25 @@ export default function App() {
                     : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
                 }`}
               >
-                <h3 className={`text-sm font-bold opacity-85 mb-4 text-right ${
-                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
-                }`}>
-                  توزيع الذكور الكلي حسب الولايات لعام 2024 م
-                </h3>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className={`text-sm font-bold opacity-85 text-right ${
+                    isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
+                  }`}>
+                    توزيع الذكور لعام 2024
+                  </h3>
+                  <span className="text-[10px] opacity-60 font-mono">توزيع الذكور حسب الولايات لعام 2024 م</span>
+                </div>
                 <HorizontalBarChart
                   labels={WILAYAS_AR}
                   data={WILAYAS_DATA_24.map(w => w.total.male)}
                   colors={WILAYAS_AR.map((_, i) => isMinimal ? `hsl(215, 80%, ${65 - i * 3}%)` : `hsl(${190 + i * 15}, 85%, 55%)`)}
                   height={250}
+                  scrollable={false}
                   theme={theme}
                 />
               </div>
 
-              {/* Female distribution */}
+              {/* Female distribution 2024 */}
               <div
                 className={`p-5 rounded-2xl border ${
                   isMinimal
@@ -623,16 +661,75 @@ export default function App() {
                     : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
                 }`}
               >
-                <h3 className={`text-sm font-bold opacity-85 mb-4 text-right ${
-                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
-                }`}>
-                  توزيع الإناث الكلي حسب الولايات لعام 2024 م
-                </h3>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className={`text-sm font-bold opacity-85 text-right ${
+                    isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
+                  }`}>
+                    توزيع الاناث لعام 2024
+                  </h3>
+                  <span className="text-[10px] opacity-60 font-mono">توزيع الإناث حسب الولايات لعام 2024 م</span>
+                </div>
                 <HorizontalBarChart
                   labels={WILAYAS_AR}
                   data={WILAYAS_DATA_24.map(w => w.total.female)}
                   colors={WILAYAS_AR.map((_, i) => isMinimal ? `hsl(335, 75%, ${65 - i * 3}%)` : `hsl(${320 + i * 12}, 85%, 55%)`)}
                   height={250}
+                  scrollable={false}
+                  theme={theme}
+                />
+              </div>
+            </div>
+
+            {/* Split totals layout block for 2025 */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Male distribution 2025 */}
+              <div
+                className={`p-5 rounded-2xl border ${
+                  isMinimal
+                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+                }`}
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className={`text-sm font-bold opacity-85 text-right ${
+                    isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
+                  }`}>
+                    توزيع الذكور لعام 2025
+                  </h3>
+                  <span className="text-[10px] opacity-60 font-mono">توزيع الذكور حسب الولايات لعام 2025 م</span>
+                </div>
+                <HorizontalBarChart
+                  labels={WILAYAS_AR}
+                  data={WILAYAS_DATA_25.map(w => w.total.male)}
+                  colors={WILAYAS_AR.map((_, i) => isMinimal ? `hsl(215, 80%, ${65 - i * 3}%)` : `hsl(${190 + i * 15}, 85%, 55%)`)}
+                  height={250}
+                  scrollable={false}
+                  theme={theme}
+                />
+              </div>
+
+              {/* Female distribution 2025 */}
+              <div
+                className={`p-5 rounded-2xl border ${
+                  isMinimal
+                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+                }`}
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className={`text-sm font-bold opacity-85 text-right ${
+                    isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
+                  }`}>
+                    توزيع الإناث لعام 2025
+                  </h3>
+                  <span className="text-[10px] opacity-60 font-mono">توزيع الإناث حسب الولايات لعام 2025 م</span>
+                </div>
+                <HorizontalBarChart
+                  labels={WILAYAS_AR}
+                  data={WILAYAS_DATA_25.map(w => w.total.female)}
+                  colors={WILAYAS_AR.map((_, i) => isMinimal ? `hsl(335, 75%, ${65 - i * 3}%)` : `hsl(${320 + i * 12}, 85%, 55%)`)}
+                  height={250}
+                  scrollable={false}
                   theme={theme}
                 />
               </div>
@@ -645,133 +742,224 @@ export default function App() {
            ========================================================================= */}
         {activeTab === 'nationality' && (
           <div className="space-y-6 animate-fadeIn">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Compare nationality groupings */}
-              <div
-                className={`p-5 rounded-2xl border ${
-                  isMinimal
-                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
-                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
-                }`}
-              >
-                <h3 className={`text-sm font-bold opacity-85 mb-4 text-right ${
-                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
+            {/* Compare nationality groupings - Enlarge Chart to full width */}
+            <div
+              className={`p-6 rounded-2xl border ${
+                isMinimal
+                  ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                  : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+              }`}
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3 className={`text-base font-bold opacity-85 text-right ${
+                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
                 }`}>
                   العمانيون مقابل غير العمانيين (2024 و 2025 م)
                 </h3>
-                <div className="h-[260px] flex items-center justify-center">
-                  <GroupedBarChart
-                    labels={['عماني ذ', 'عماني إ', 'وافد ذ', 'وافد إ']}
-                    datasets={[
-                      {
-                        label: 'عام 2024م',
-                        data: [120745, 118098, 227098, 63684],
-                        color: isMinimal ? '#94a3b8' : isPulse ? '#00b4d8' : '#85c1e9'
-                      },
-                      {
-                        label: 'عام 2025م',
-                        data: [123542, 120782, 219568, 69005],
-                        color: isMinimal ? '#2563eb' : isPulse ? '#f72585' : '#c9a84c'
-                      }
-                    ]}
-                    theme={theme}
-                  />
-                </div>
+                <span className="text-xs opacity-60 font-mono">دراسة مقارنة تفصيلية</span>
               </div>
-
-              {/* Geographic structure per Wilayat */}
-              <div
-                className={`p-5 rounded-2xl border ${
-                  isMinimal
-                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
-                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
-                }`}
-              >
-                <h3 className={`text-sm font-bold opacity-85 mb-4 text-right ${
-                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
-                }`}>
-                  المواطنون والوافدون حسب كل ولاية (2024 م)
-                </h3>
-                <div className="h-[260px] flex items-center justify-center">
-                  <GroupedBarChart
-                    labels={WILAYAS_AR}
-                    datasets={[
-                      {
-                        label: 'المواطنون العمانيون',
-                        data: WILAYAS_DATA_24.map(w => w.omani.both),
-                        color: isMinimal ? '#2563eb' : isPulse ? '#00b4d8' : '#c9a84c'
-                      },
-                      {
-                        label: 'الوافدون (غير العمانيين)',
-                        data: WILAYAS_DATA_24.map(w => w.nonOmani.both),
-                        color: isMinimal ? '#f43f5e' : isPulse ? '#f72585' : '#85c1e9'
-                      }
-                    ]}
-                    theme={theme}
-                  />
-                </div>
+              <div className="h-[380px] w-full">
+                <GroupedBarChart
+                  height={380}
+                  labels={['عمانيون ذكور', 'عمانيات إناث', 'وافدون ذكور', 'وافدات إناث']}
+                  datasets={[
+                    {
+                      label: 'عام 2024م',
+                      data: [120745, 118098, 227098, 63684],
+                      color: isMinimal ? '#94a3b8' : isPulse ? '#00b4d8' : '#3b82f6'
+                    },
+                    {
+                      label: 'عام 2025م',
+                      data: [123542, 120782, 219568, 69005],
+                      color: isMinimal ? '#2563eb' : isPulse ? '#f72585' : '#c9a84c'
+                    }
+                  ]}
+                  theme={theme}
+                />
               </div>
             </div>
 
+            {/* Geographic structure per Wilayat - Enlarge Chart to full width */}
+            <div
+              className={`p-6 rounded-2xl border ${
+                isMinimal
+                  ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                  : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+              }`}
+            >
+              <div className="flex justify-between items-center mb-3">
+                <h3 className={`text-base font-bold opacity-85 text-right ${
+                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
+                }`}>
+                  المواطنون والوافدون حسب كل ولاية (2024 م)
+                </h3>
+                <span className="text-xs opacity-60 font-mono">تفصيل جغرافي لجميع الولايات</span>
+              </div>
+              <p className={`text-xs mb-4 text-right ${isMinimal ? 'text-gray-500' : 'opacity-75'}`}>
+                مستويات التركز السكاني وقدرة جذب واستيعاب العمالة والوافدين بين الحضر والأطراف
+              </p>
+              <div className="h-[430px] w-full">
+                <GroupedBarChart
+                  height={430}
+                  labels={WILAYAS_AR}
+                  datasets={[
+                    {
+                      label: 'المواطنون العمانيون',
+                      data: WILAYAS_DATA_24.map(w => w.omani.both),
+                      color: isMinimal ? '#2563eb' : isPulse ? '#00b4d8' : '#3b82f6'
+                    },
+                    {
+                      label: 'الوافدون (غير العمانيين)',
+                      data: WILAYAS_DATA_24.map(w => w.nonOmani.both),
+                      color: isMinimal ? '#f43f5e' : isPulse ? '#ff007f' : '#f59e0b'
+                    }
+                  ]}
+                  theme={theme}
+                />
+              </div>
+            </div>
+
+            {/* Comparison of structure for expatriates (Non-Omanis) by gender - side-by-side (2024 vs 2025) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Structure non omanis gender */}
+              {/* Structure non-omanis gender 2024 */}
               <div
-                className={`p-4 rounded-2xl border text-center ${
+                className={`p-5 rounded-2xl border text-center ${
                   isMinimal
                     ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
                     : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
                 }`}
               >
-                <h3 className={`text-xs font-bold opacity-80 mb-4 ${
-                  isMinimal ? 'text-gray-500' : isPulse ? 'text-cyan-400' : 'text-amber-500'
+                <h3 className={`text-sm font-bold opacity-85 mb-4 ${
+                  isMinimal ? 'text-gray-700' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
                 }`}>
                   هيكل غير العمانيين (الوافدين) حسب النوع (2024 م)
                 </h3>
-                <div className="h-[210px] flex items-center justify-center">
+                <div className="h-[230px] flex items-center justify-center">
                   <DoughnutChart
                     data={[
                       { label: 'وافدون ذكور', value: 227098, color: '#3b82f6' },
                       { label: 'وافدات إناث', value: 63684, color: '#f43f5e' }
                     ]}
-                    innerLabel="إجمالي الوافدين"
+                    innerLabel="إجمالي الوافدين 24"
                     innerValue="290,782"
                     theme={theme}
                   />
                 </div>
               </div>
 
-              {/* Progress bars percentages of non omanis inside individual categories */}
+              {/* Structure non-omanis gender 2025 */}
               <div
-                className={`p-5 rounded-2xl border text-right flex flex-col justify-between ${
+                className={`p-5 rounded-2xl border text-center ${
                   isMinimal
                     ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
                     : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
                 }`}
               >
-                <div className="mb-3">
-                  <h3 className={`text-xs font-bold opacity-80 ${
-                    isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500'
+                <h3 className={`text-sm font-bold opacity-85 mb-4 ${
+                  isMinimal ? 'text-gray-700' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
+                }`}>
+                  هيكل غير العمانيين (الوافدين) حسب النوع (2025 م)
+                </h3>
+                <div className="h-[230px] flex items-center justify-center">
+                  <DoughnutChart
+                    data={[
+                      { label: 'وافدون ذكور', value: 219568, color: '#00b4d8' },
+                      { label: 'وافدات إناث', value: 69005, color: '#ff007f' }
+                    ]}
+                    innerLabel="إجمالي الوافدين 25"
+                    innerValue="288,573"
+                    theme={theme}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Expatriates percentage from total within each Wilayat - side-by-side (2024 vs 2025) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* 2024 Expatriate percentages */}
+              <div
+                className={`p-6 rounded-2xl border text-right flex flex-col justify-between ${
+                  isMinimal
+                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+                }`}
+              >
+                <div className="mb-4">
+                  <h3 className={`text-base font-bold opacity-85 ${
+                    isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
                   }`}>
-                    نسبة الوافدين الكلية من إجمالي تكوين كل ولاية (2024 م)
+                    نسبة الوافدين الكلية من إجمالي تكوين كل ولاية لعام (2024 م)
                   </h3>
-                  <p className={`text-[10px] mt-0.5 ${isMinimal ? 'text-gray-400' : 'opacity-65'}`}>مؤشر يدل على قوة جذب المراكز الاقتصادية الحضرية للعمالة والوافدين</p>
+                  <p className={`text-xs mt-1 ${isMinimal ? 'text-gray-400' : 'opacity-65'}`}>
+                    مؤشر يدل على مدى استقطاب ولايات محافظة ظفار للعمالة الوافدة في عام 2024 م
+                  </p>
                 </div>
 
-                <div className="space-y-2.5 max-h-[190px] overflow-y-auto pr-1 hide-scrollbar">
+                {/* No height limitations so all 10 wilayas are generated explicitly inline */}
+                <div className="space-y-3.5">
                   {WILAYAS_DATA_24.map((w) => {
                     const pctOfWil = ((w.nonOmani.both / w.total.both) * 100).toFixed(1);
                     return (
-                      <div key={w.name} className="flex flex-col gap-1">
+                      <div key={w.name} className="flex flex-col gap-1 w-full">
                         <div className="flex justify-between items-center text-xs font-bold leading-normal">
                           <span className={isMinimal ? 'text-gray-800' : 'text-white'}>{w.name}</span>
-                          <span className={`font-mono ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>{pctOfWil}%</span>
+                          <span className={`font-mono ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>
+                            {pctOfWil}% ({formatNumber(w.nonOmani.both)} وافد من أصل {formatNumber(w.total.both)})
+                          </span>
                         </div>
-                        <div className={`w-full h-2 rounded-full overflow-hidden border ${
+                        <div className={`w-full h-2.5 rounded-full overflow-hidden border ${
                           isMinimal ? 'bg-gray-100 border-gray-200/50' : 'bg-slate-800/40 border-white/5'
                         }`}>
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${
                               isMinimal ? 'bg-blue-600' : isPulse ? 'bg-cyan-500' : 'bg-amber-600'
+                            }`}
+                            style={{ width: `${pctOfWil}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 2025 Expatriate percentages */}
+              <div
+                className={`p-6 rounded-2xl border text-right flex flex-col justify-between ${
+                  isMinimal
+                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+                }`}
+              >
+                <div className="mb-4">
+                  <h3 className={`text-base font-bold opacity-85 ${
+                    isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
+                  }`}>
+                    نسبة الوافدين الكلية من إجمالي تكوين كل ولاية لعام (2025 م)
+                  </h3>
+                  <p className={`text-xs mt-1 ${isMinimal ? 'text-gray-400' : 'opacity-65'}`}>
+                    مؤشر يدل على مدى استقطاب ولايات محافظة ظفار للعمالة الوافدة في عام 2025 م
+                  </p>
+                </div>
+
+                {/* No height limitations so all 10 wilayas are generated explicitly inline */}
+                <div className="space-y-3.5">
+                  {WILAYAS_DATA_25.map((w) => {
+                    const pctOfWil = ((w.nonOmani.both / w.total.both) * 100).toFixed(1);
+                    return (
+                      <div key={w.name} className="flex flex-col gap-1 w-full">
+                        <div className="flex justify-between items-center text-xs font-bold leading-normal">
+                          <span className={isMinimal ? 'text-gray-800' : 'text-white'}>{w.name}</span>
+                          <span className={`font-mono ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>
+                            {pctOfWil}% ({formatNumber(w.nonOmani.both)} وافد من أصل {formatNumber(w.total.both)})
+                          </span>
+                        </div>
+                        <div className={`w-full h-2.5 rounded-full overflow-hidden border ${
+                          isMinimal ? 'bg-gray-100 border-gray-200/50' : 'bg-slate-800/40 border-white/5'
+                        }`}>
+                          <div
+                            className={`h-full rounded-full transition-all duration-500 ${
+                              isMinimal ? 'bg-indigo-600' : isPulse ? 'bg-cyan-500' : 'bg-amber-500'
                             }`}
                             style={{ width: `${pctOfWil}%` }}
                           />
@@ -789,10 +977,21 @@ export default function App() {
              PAGE 7: HEALTH PLANNING COHORTS
            ========================================================================= */}
         {activeTab === 'health' && (
-          <div className="space-y-6 animate-fadeIn">
+          <div className="space-y-8 animate-fadeIn">
+            {/* Advanced Geographic Specialization & Target cohorts dashboard */}
+            <HealthPlanningDetails theme={theme} />
+
+            <div className="border-t border-dashed my-6 border-current border-opacity-10" />
+
+            <h3 className={`text-md font-bold text-right pt-2 ${
+              isMinimal ? 'text-blue-600 font-sans' : 'text-cyan-400'
+            }`}>
+              🏥 المؤشرات الصحية لعام 2025 م:
+            </h3>
+
             {/* Grid layout */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pt-1">
-              {HEALTH_GROUPS_24.map((grp) => (
+              {HEALTH_GROUPS_25.map((grp) => (
                 <div
                   key={grp.id}
                   className={`p-4 rounded-2xl text-center border relative overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-lg flex flex-col justify-between ${
@@ -830,58 +1029,47 @@ export default function App() {
               ))}
             </div>
 
-            {/* Graphs for health target populations */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Cohorts count comparison */}
-              <div
-                className={`p-5 rounded-2xl border ${
-                  isMinimal
-                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
-                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
-                }`}
-              >
-                <h3 className={`text-sm font-bold opacity-85 mb-4 text-right flex items-center gap-1.5 ${
-                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
-                }`}>
-                  <Heart className={`w-4.5 h-4.5 text-pink-500 ${isMinimal ? '' : 'animate-pulse'}`} />
-                  <span>الفئات العمرية الصحية الصغرى والمستهدفة (السنة 2024 م)</span>
-                </h3>
-                <div className="h-[250px] flex items-center justify-center">
+            {/* Unified 2025 Health Demographics Panel - No page scroll needed */}
+            <div
+              className={`p-5 rounded-2xl border ${
+                isMinimal
+                  ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                  : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+              }`}
+            >
+              <h3 className={`text-sm font-bold opacity-85 mb-5 text-right flex items-center gap-1.5 ${
+                isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
+              }`}>
+                <Heart className={`w-4.5 h-4.5 text-pink-500 ${isMinimal ? '' : 'animate-pulse'}`} />
+                <span>التقرير البياني الموحد: الفئات العمرية مصنفة والنسبة الهيكلية الكلية المستفيدة (لعام 2025م):</span>
+              </h3>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                {/* Horizontal Bar Chart (Col-span 7) */}
+                <div className="lg:col-span-7">
+                  <span className="text-[11px] opacity-70 font-bold mb-3 block text-right border-b border-dashed border-current border-opacity-10 pb-1.5">أعداد الفئات العمرية المستهدفة (2025م):</span>
                   <HorizontalBarChart
-                    labels={HEALTH_GROUPS_24.map(g => g.titleAr.split('(')[0].trim())}
-                    data={HEALTH_GROUPS_24.map(g => g.count)}
+                    labels={HEALTH_GROUPS_25.map(g => g.titleAr.split('(')[0].trim())}
+                    data={HEALTH_GROUPS_25.map(g => g.count)}
                     colors={isMinimal ? ['#3b82f6', '#ec4899', '#10b981', '#f59e0b', '#a855f7', '#14b8a6'] : ['#00b4d8', '#f72585', '#06d6a0', '#ffd166', '#a29bfe', '#74b9ff']}
                     height={250}
                     theme={theme}
                   />
                 </div>
-              </div>
 
-              {/* Share Pie for health target populations */}
-              <div
-                className={`p-5 rounded-2xl border ${
-                  isMinimal
-                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
-                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
-                }`}
-              >
-                <h3 className={`text-sm font-bold opacity-85 mb-4 text-right flex items-center gap-1.5 ${
-                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
-                }`}>
-                  <Layers className={`w-4.5 h-4.5 ${isMinimal ? 'text-blue-600' : 'text-amber-500'}`} />
-                  <span>النسبة الهيكلية للفئات التخطيطية الصحية الكلية المستفيدة</span>
-                </h3>
-                <div className="h-[240px] flex items-center justify-center">
+                {/* Doughnut Chart (Col-span 5) */}
+                <div className="lg:col-span-12 xl:col-span-5 border-t lg:border-t-0 lg:border-r border-dashed border-current border-opacity-10 pt-4 lg:pt-0 pr-0 lg:pr-6">
+                  <span className="text-[11px] opacity-70 font-bold mb-3 block text-right border-b border-dashed border-current border-opacity-10 pb-1.5">مساهمة النسبة الهيكلية للفئات الكلية:</span>
                   <DoughnutChart
-                    data={HEALTH_GROUPS_24.map((g) => ({
+                    data={HEALTH_GROUPS_25.map((g) => ({
                       label: g.titleAr.split('(')[0].trim(),
                       value: g.count,
                       color: isMinimal
                         ? (g.id === 'infants' ? '#3b82f6' : g.id === 'under5' ? '#ec4899' : g.id === 'students' ? '#10b981' : g.id === 'reproductive' ? '#f59e0b' : g.id === 'older' ? '#a855f7' : '#14b8a6')
                         : (g.id === 'infants' ? '#00b4d8' : g.id === 'under5' ? '#f72585' : g.id === 'students' ? '#06d6a0' : g.id === 'reproductive' ? '#ffd166' : g.id === 'older' ? '#e040fb' : '#64ffda')
                     }))}
-                    innerLabel="مجموع الفئات الطبية"
-                    innerValue="250,544 نسمة"
+                    innerLabel="الفئات المستفيدة"
+                    innerValue="262,285 نسمة"
                     theme={theme}
                   />
                 </div>

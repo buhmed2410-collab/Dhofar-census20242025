@@ -24,11 +24,7 @@ html, body {
   font-family: "Cairo", sans-serif;
 }
 
-.theme-heritage {
-  background-color: #1a0a00;
-  color: #f2e8d5;
-  font-family: "Amiri", serif;
-}
+
 
 .theme-minimal {
   background-color: #F9FAFB;
@@ -55,6 +51,4 @@ html, body {
   box-shadow: 0 0 15px rgba(0, 180, 216, 0.45);
 }
 
-.heritage-glow {
-  box-shadow: 0 0 15px rgba(201, 168, 76, 0.45);
-}
+

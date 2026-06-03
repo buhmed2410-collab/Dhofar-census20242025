@@ -13,7 +13,6 @@ interface GrowthSimulatorProps {
 
 export const GrowthSimulator: React.FC<GrowthSimulatorProps> = ({ theme }) => {
   const isPulse = theme === 'pulse';
-  const isHeritage = theme === 'heritage';
   const isMinimal = theme === 'minimal';
 
   const basePopulation = 532897; // 2025 Total
