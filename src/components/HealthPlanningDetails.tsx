@@ -265,8 +265,8 @@ export const HealthPlanningDetails: React.FC<HealthPlanningDetailsProps> = ({ th
                 </span>
               </div>
 
-              {/* Rank Items Lists */}
-              <div className="space-y-2.5">
+              {/* Rank Items Lists - Two-column compact grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {activeCohortList.map((item, idx) => {
                   const dataOM25 = EXACT_OMANI_25_BY_WILAYA[item.name] || [];
                   const dataNOM25 = EXACT_NON_OMANI_25_BY_WILAYA[item.name] || [];
@@ -295,32 +295,32 @@ export const HealthPlanningDetails: React.FC<HealthPlanningDetailsProps> = ({ th
                   return (
                     <div
                       key={item.name}
-                      className={`space-y-2 p-2.5 rounded-xl border transition-all ${
+                      className={`p-3 rounded-xl border transition-all flex flex-col justify-between gap-2.5 ${
                         isMinimal
-                          ? 'bg-slate-50 border-slate-200/60 shadow-sm text-gray-900'
+                          ? 'bg-slate-50 border-slate-200/65 shadow-sm text-gray-900 hover:border-slate-300'
                           : 'border-white/5 bg-slate-950/60 hover:bg-slate-900/60'
                       }`}
                     >
                       {/* Name rank and count indicator */}
-                      <div className="flex justify-between items-center text-sm">
-                        <div className="flex items-center gap-2 font-bold">
-                          <span className={`text-xs w-6 h-6 flex items-center justify-center rounded-full font-mono font-bold ${
+                      <div className="flex justify-between items-center text-xs">
+                        <div className="flex items-center gap-1.5 font-bold">
+                          <span className={`text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-mono font-bold ${
                             isMinimal ? 'bg-gray-200/80 text-gray-800' : 'bg-cyan-500/20 text-cyan-300'
                           }`}>{idx + 1}</span>
-                          <span className={isMinimal ? 'text-gray-900 font-extrabold' : 'text-white text-md font-extrabold'}>{item.name}</span>
-                          <span className={`text-[11px] font-semibold ${isMinimal ? 'text-gray-500' : 'text-gray-400'} opacity-75`}>
-                            ({item.pctOfWil.toFixed(1)}% من سكان البالغ الكلي)
+                          <span className={`${isMinimal ? 'text-gray-900 font-extrabold' : 'text-white font-extrabold'} text-xs truncate max-w-[100px] md:max-w-none`}>{item.name}</span>
+                          <span className={`text-[10px] ${isMinimal ? 'text-gray-400' : 'text-gray-500'} font-semibold`}>
+                            ({item.pctOfWil.toFixed(1)}%)
                           </span>
                         </div>
-                        <div className="font-mono text-sm font-black text-right">
-                          <span className={isMinimal ? 'text-blue-600 font-bold' : 'text-emerald-400 text-md font-black'}>{formatNumber(item.count)}</span>
-                          <span className={`text-[11px] font-normal ${isMinimal ? 'text-gray-500' : 'opacity-70'} mr-1`}>نسمة</span>
+                        <div className="font-mono text-xs font-black text-right shrink-0">
+                          <span className={isMinimal ? 'text-blue-600 font-bold' : 'text-emerald-400 font-black'}>{formatNumber(item.count)}</span>
+                          <span className={`text-[9px] font-normal ${isMinimal ? 'text-gray-500' : 'opacity-70'} mr-0.5`}>نسمة</span>
                         </div>
                       </div>
 
-                      {/* Bar representations showing omani citizens slice vs non-omani in current cohort */}
-                      <div className="flex items-center gap-4">
-                        <div className={`flex-1 h-4 rounded-md overflow-hidden flex border ${
+                      {/* Bar representations showing omani citizens slice vs non-omani - compact and thin */}
+                      <div className="space-y-1.5">
+                        <div className={`w-full h-2.5 rounded-full overflow-hidden flex border ${
                           isMinimal ? 'bg-gray-200/50 border-gray-300/40' : 'bg-slate-800/40 border-white/10'
                         }`}>
                           <div 
@@ -335,12 +335,13 @@ export const HealthPlanningDetails: React.FC<HealthPlanningDetailsProps> = ({ th
                           />
                         </div>
 
-                        {/* Breakdown tag */}
-                        <span className={`text-[10px] font-mono shrink-0 w-[145px] text-left opacity-95 ${
-                          isMinimal ? 'text-gray-700' : 'text-gray-300'
+                        {/* Breakdown tag - aligned compactly below the bar */}
+                        <div className={`text-[9.5px] font-mono flex items-center justify-between opacity-90 ${
+                          isMinimal ? 'text-gray-600' : 'text-gray-400'
                         }`}>
-                          عماني: <span className={isMinimal ? 'text-emerald-700 font-extrabold' : 'text-emerald-400 font-extrabold'}>{formatNumber(activeOmani)}</span> <span className="opacity-40">|</span> وافد: <span className={isMinimal ? 'text-amber-700 font-extrabold' : 'text-amber-600 font-extrabold'}>{formatNumber(activeNonOmani)}</span>
-                        </span>
+                          <span>عماني: <span className={isMinimal ? 'text-emerald-700 font-bold' : 'text-emerald-400 font-bold'}>{formatNumber(activeOmani)}</span></span>
+                          <span>وافد: <span className={isMinimal ? 'text-amber-700 font-bold' : 'text-amber-500 font-bold'}>{formatNumber(activeNonOmani)}</span></span>
+                        </div>
                       </div>
                     </div>
                   );

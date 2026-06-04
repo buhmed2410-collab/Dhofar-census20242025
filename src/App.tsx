@@ -47,7 +47,7 @@ import {
 } from 'lucide-react';
 
 export default function App() {
-  const [theme, setTheme] = useState<ThemeType>('pulse');
+  const [theme, setTheme] = useState<ThemeType>('minimal');
   const [activeTab, setActiveTab] = useState<string>('general');
   const [generalYear, setGeneralYear] = useState<'2024' | '2025' | 'both'>('2024');
   const [selectedHealthYear, setSelectedHealthYear] = useState<'2024' | '2025'>('2025');

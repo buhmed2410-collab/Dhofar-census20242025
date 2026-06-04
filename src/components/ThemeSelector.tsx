@@ -37,7 +37,7 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ currentTheme, onCh
           id="btn-theme-minimal"
         >
           <Sparkles className="w-3.5 h-3.5" />
-          <span>✨ النمط البسيط</span>
+          <span>✨ النمط الأساسي</span>
         </button>
         <button
           onClick={() => onChange('pulse')}
