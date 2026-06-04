@@ -50,6 +50,7 @@ export default function App() {
   const [theme, setTheme] = useState<ThemeType>('pulse');
   const [activeTab, setActiveTab] = useState<string>('general');
   const [generalYear, setGeneralYear] = useState<'2024' | '2025' | 'both'>('2024');
+  const [selectedHealthYear, setSelectedHealthYear] = useState<'2024' | '2025'>('2025');
 
 
 
@@ -63,37 +64,37 @@ export default function App() {
   const getKpis = () => {
     if (generalYear === '2024') {
       return [
-        { label: 'إجمالي سكان ظفار 2024', val: 529625, desc: 'حسب بيانات منتصف 2024م', key: 'tot' },
-        { label: 'الذكور (Males)', val: 347843, desc: '65.7% من إجمالي السكان', color: 'text-cyan-400', key: 'm' },
-        { label: 'الإناث (Females)', val: 181782, desc: '34.3% من إجمالي السكان', color: 'text-pink-500', key: 'f' },
-        { label: 'المواطنون العمانيون', val: 238843, desc: '45.1% من الإجمالي الكلي', color: 'text-emerald-400', key: 'o' },
-        { label: 'الوافدون (غير العمانيين)', val: 290782, desc: '54.9% من الإجمالي الكلي', color: 'text-amber-400', key: 'n' },
-        { label: 'نسبة النوع', val: 191.4, desc: 'ذكر لكل 100 أنثى', isRaw: true, key: 'g' },
-        { label: 'الولاية الأكثر سكاناً', val: 430404, labelS: 'صلالة', desc: '81.3% من سكان المحافظة', key: 'top' },
-        { label: 'الولاية الأقل سكاناً', val: 876, labelS: 'مقشن', desc: 'أقل الولايات كثافة عددية', key: 'min' }
+        { label: 'إجمالي سكان ظفار 2024', val: 529625, desc: 'حسب بيانات منتصف 2024م', key: 'tot', change: '+1.45%' },
+        { label: 'الذكور (Males)', val: 347843, desc: '65.7% من إجمالي السكان', color: 'text-cyan-400', key: 'm', change: '+1.12%' },
+        { label: 'الإناث (Females)', val: 181782, desc: '34.3% من إجمالي السكان', color: 'text-pink-500', key: 'f', change: '+2.10%' },
+        { label: 'المواطنون العمانيون', val: 238843, desc: '45.1% من الإجمالي الكلي', color: 'text-emerald-400', key: 'o', change: '+2.45%' },
+        { label: 'الوافدون (غير العمانيين)', val: 290782, desc: '54.9% من الإجمالي الكلي', color: 'text-amber-400', key: 'n', change: '+1.02%' },
+        { label: 'نسبة النوع', val: 191.4, desc: 'ذكر لكل 100 أنثى', isRaw: true, key: 'g', change: '-1.37%' },
+        { label: 'الولاية الأكثر سكاناً', val: 430404, labelS: 'صلالة', desc: '81.3% من سكان المحافظة', key: 'top', change: '+1.52%' },
+        { label: 'الولاية الأقل سكاناً', val: 876, labelS: 'مقشن', desc: 'أقل الولايات كثافة عددية', key: 'min', change: '-1.82%' }
       ];
     } else if (generalYear === '2025') {
       return [
-        { label: 'إجمالي سكان ظفار 2025', val: 532897, desc: 'حسب بيانات منتصف 2025م', key: 'tot' },
-        { label: 'الذكور (Males)', val: 343110, desc: '64.4% من إجمالي السكان', color: 'text-cyan-400', key: 'm' },
-        { label: 'الإناث (Females)', val: 189787, desc: '35.6% من إجمالي السكان', color: 'text-pink-500', key: 'f' },
-        { label: 'المواطنون العمانيون', val: 244324, desc: '45.8% من الإجمالي الكلي', color: 'text-emerald-400', key: 'o' },
-        { label: 'الوافدون (غير العمانيين)', val: 288573, desc: '54.2% من الإجمالي الكلي', color: 'text-amber-400', key: 'n' },
-        { label: 'نسبة النوع', val: 180.8, desc: 'ذكر لكل 100 أنثى', isRaw: true, key: 'g' },
-        { label: 'الولاية الأكثر سكاناً', val: 430294, labelS: 'صلالة', desc: '80.8% من سكان المحافظة', key: 'top' },
-        { label: 'الولاية الأقل سكاناً', val: 852, labelS: 'مقشن', desc: 'أقل الولايات كثافة عددية', key: 'min' }
+        { label: 'إجمالي سكان ظفار 2025', val: 532897, desc: 'حسب بيانات منتصف 2025م', key: 'tot', change: '+0.62%' },
+        { label: 'الذكور (Males)', val: 343110, desc: '64.4% من إجمالي السكان', color: 'text-cyan-400', key: 'm', change: '-1.36%' },
+        { label: 'الإناث (Females)', val: 189787, desc: '35.6% من إجمالي السكان', color: 'text-pink-500', key: 'f', change: '+4.40%' },
+        { label: 'المواطنون العمانيون', val: 244324, desc: '45.8% من الإجمالي الكلي', color: 'text-emerald-400', key: 'o', change: '+2.29%' },
+        { label: 'الوافدون (غير العمانيين)', val: 288573, desc: '54.2% من الإجمالي الكلي', color: 'text-amber-400', key: 'n', change: '-0.76%' },
+        { label: 'نسبة النوع', val: 180.8, desc: 'ذكر لكل 100 أنثى', isRaw: true, key: 'g', change: '-5.54%' },
+        { label: 'الولاية الأكثر سكاناً', val: 430294, labelS: 'صلالة', desc: '80.8% من سكان المحافظة', key: 'top', change: '-0.03%' },
+        { label: 'الولاية الأقل سكاناً', val: 852, labelS: 'مقشن', desc: 'أقل الولايات كثافة عددية', key: 'min', change: '-2.74%' }
       ];
     } else {
       // Comparison 2024 vs 2025
       return [
         { label: 'سكان ظفار 2024', val: 529625, desc: 'سنة مرجعية أولى', key: 'tot4' },
-        { label: 'سكان ظفار 2025', val: 532897, desc: 'سنة مقارنة ثانية', key: 'tot5' },
-        { label: 'الزيادة العددية الكلية', val: +3272, desc: 'معدل نمو سنوي إيجابي +0.6%', key: 'inc' },
-        { label: 'نمو المواطنين العمانيين', val: +5481, desc: 'زيادة مستمرة للعمانيين', color: 'text-emerald-400', key: 'oinc' },
+        { label: 'سكان ظفار 2025', val: 532897, desc: 'سنة مقارنة ثانية', key: 'tot5', change: '+0.62%' },
+        { label: 'الزيادة العددية الكلية', val: +3272, desc: 'معدل نمو سنوي إيجابي +0.6%', key: 'inc', change: '+0.62%' },
+        { label: 'نمو المواطنين العمانيين', val: +5481, desc: 'زيادة مستمرة للعمانيين', color: 'text-emerald-400', key: 'oinc', change: '+2.29%' },
         { label: 'الذكور لعام 2024', val: 347843, desc: 'Males 2024', key: 'm4' },
-        { label: 'الذكور لعام 2025', val: 343110, desc: 'Males 2025', key: 'm5' },
+        { label: 'الذكور لعام 2025', val: 343110, desc: 'Males 2025', key: 'm5', change: '-1.36%' },
         { label: 'الإناث لعام 2024', val: 181782, desc: 'Females 2024', key: 'f4' },
-        { label: 'الإناث لعام 2025', val: 189787, desc: 'Females 2025', key: 'f5' }
+        { label: 'الإناث لعام 2025', val: 189787, desc: 'Females 2025', key: 'f5', change: '+4.40%' }
       ];
     }
   };
@@ -230,6 +231,34 @@ export default function App() {
               </div>
             </div>
 
+            {/* Legend/Info Banner about indicators */}
+            <div className={`p-3 rounded-xl border text-right text-xs flex flex-col sm:flex-row-reverse sm:items-center sm:justify-between gap-3 ${
+              isMinimal 
+                ? 'bg-blue-50/50 border-blue-100 text-blue-900' 
+                : isPulse 
+                  ? 'bg-cyan-950/20 border-cyan-500/10 text-cyan-200'
+                  : 'bg-amber-950/20 border-amber-500/10 text-amber-200'
+            }`}>
+              <div className="flex items-center gap-2 justify-end flex-row-reverse">
+                <span className="text-sm">ℹ️</span>
+                <span className="font-bold">
+                  {generalYear === '2024' && "مؤشر التغير: يقيس النمو السنوي لمنتصف عام 2024م مقارنة بمنتصف عام 2023م كخط أساس."}
+                  {generalYear === '2025' && "مؤشر التغير: يقيس النمو السنوي لمنتصف عام 2025م مقارنة بمنتصف عام 2024م كخط أساس."}
+                  {generalYear === 'both' && "مؤشر التغير: يقيس صافي نمو أو حركات الهجرة والانتقال الديموغرافي لعام 2025م مقارنة لعام 2024م."}
+                </span>
+              </div>
+              <div className="flex gap-4 items-center justify-end flex-row-reverse flex-wrap">
+                <span className="flex items-center gap-1.5 flex-row-reverse text-[11px]">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                  <span className="opacity-90">بالأخضر (+): نمو أو زيادة سكانية</span>
+                </span>
+                <span className="flex items-center gap-1.5 flex-row-reverse text-[11px]">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span>
+                  <span className="opacity-90">بالأحمر (-): انخفاض أو إعادة توزيع هيكلي للوافدين أو الجنسين</span>
+                </span>
+              </div>
+            </div>
+
             {/* KPI grid counts */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {currentKpis.map((kpi, idx) => {
@@ -261,11 +290,34 @@ export default function App() {
                     }`}>
                       {kpi.label}
                     </span>
-                    <span
-                      className={`font-mono text-2xl md:text-3xl font-black block mt-2 text-right tracking-wider ${getKpiColor(kpi.key, kpi.color)}`}
-                    >
-                      {kpi.labelS ? `${kpi.labelS} (${formatNumber(kpi.val)})` : kpi.isRaw ? kpi.val : formatNumber(kpi.val)}
-                    </span>
+                    
+                    <div className="flex items-center justify-between mt-2 gap-2 flex-row-reverse">
+                      <span
+                        className={`font-mono text-xl sm:text-2xl md:text-3xl font-black block tracking-wider ${getKpiColor(kpi.key, kpi.color)}`}
+                      >
+                        {kpi.labelS ? `${kpi.labelS} (${formatNumber(kpi.val)})` : kpi.isRaw ? kpi.val : formatNumber(kpi.val)}
+                      </span>
+                      {kpi.change && (
+                        <span 
+                          dir="ltr" 
+                          className="text-[11px] font-mono font-bold px-1.5 py-0.5 rounded-md flex items-center shrink-0 border border-transparent"
+                          style={{
+                            color: kpi.change.startsWith('+') 
+                              ? (isMinimal ? '#10b981' : '#34d399')
+                              : (isMinimal ? '#ef4444' : '#f87171'),
+                            backgroundColor: kpi.change.startsWith('+')
+                              ? (isMinimal ? 'rgba(16,185,129,0.08)' : 'rgba(52,211,153,0.12)')
+                              : (isMinimal ? 'rgba(239,68,68,0.08)' : 'rgba(248,113,113,0.12)'),
+                            borderColor: kpi.change.startsWith('+')
+                              ? (isMinimal ? 'rgba(16,185,129,0.15)' : 'rgba(52,211,153,0.2)')
+                              : (isMinimal ? 'rgba(239,68,68,0.15)' : 'rgba(248,113,113,0.2)')
+                          }}
+                        >
+                          {kpi.change}
+                        </span>
+                      )}
+                    </div>
+
                     <span className={`text-[10px] block mt-1.5 text-right font-medium ${
                       isMinimal ? 'text-gray-400' : 'opacity-60'
                     }`}>
@@ -742,7 +794,87 @@ export default function App() {
            ========================================================================= */}
         {activeTab === 'nationality' && (
           <div className="space-y-6 animate-fadeIn">
-            {/* Compare nationality groupings - Enlarge Chart to full width */}
+            {/* Geographic structure per Wilayat - 2024 */}
+            <div
+              className={`p-6 rounded-2xl border ${
+                isMinimal
+                  ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                  : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+              }`}
+            >
+              <div className="flex justify-between items-center mb-3">
+                <h3 className={`text-base font-bold opacity-85 text-right ${
+                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
+                }`}>
+                  المواطنون والوافدون حسب كل ولاية (2024 م)
+                </h3>
+                <span className="text-xs opacity-60 font-mono">تفصيل جغرافي لعام 24</span>
+              </div>
+              <p className={`text-xs mb-4 text-right ${isMinimal ? 'text-gray-500' : 'opacity-75'}`}>
+                مستويات التركز السكاني وقدرة جذب واستيعاب العمالة والوافدين في عام 2024م
+              </p>
+              <div className="h-[430px] w-full">
+                <GroupedBarChart
+                  height={430}
+                  labels={WILAYAS_AR}
+                  datasets={[
+                    {
+                      label: 'المواطنون العمانيون (2024م)',
+                      data: WILAYAS_DATA_24.map(w => w.omani.both),
+                      color: isMinimal ? '#2563eb' : isPulse ? '#00b4d8' : '#3b82f6'
+                    },
+                    {
+                      label: 'الوافدون (غير العمانيين - 2024م)',
+                      data: WILAYAS_DATA_24.map(w => w.nonOmani.both),
+                      color: isMinimal ? '#f43f5e' : isPulse ? '#ff007f' : '#f59e0b'
+                    }
+                  ]}
+                  theme={theme}
+                />
+              </div>
+            </div>
+
+            {/* Geographic structure per Wilayat - 2025 */}
+            <div
+              className={`p-6 rounded-2xl border ${
+                isMinimal
+                  ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                  : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+              }`}
+            >
+              <div className="flex justify-between items-center mb-3">
+                <h3 className={`text-base font-bold opacity-85 text-right ${
+                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
+                }`}>
+                  المواطنون والوافدون حسب كل ولاية (2025 م)
+                </h3>
+                <span className="text-xs opacity-60 font-mono">تفصيل جغرافي لعام 25</span>
+              </div>
+              <p className={`text-xs mb-4 text-right ${isMinimal ? 'text-gray-500' : 'opacity-75'}`}>
+                مستويات التركز السكاني وقدرة جذب واستيعاب العمالة والوافدين في عام 2025م
+              </p>
+              <div className="h-[430px] w-full">
+                <GroupedBarChart
+                  height={430}
+                  labels={WILAYAS_AR}
+                  datasets={[
+                    {
+                      label: 'المواطنون العمانيون (2025م)',
+                      data: WILAYAS_DATA_25.map(w => w.omani.both),
+                      color: isMinimal ? '#1d4ed8' : isPulse ? '#0096c7' : '#1d4ed8'
+                    },
+                    {
+                      label: 'الوافدون (غير العمانيين - 2025م)',
+                      data: WILAYAS_DATA_25.map(w => w.nonOmani.both),
+                      color: isMinimal ? '#e11d48' : isPulse ? '#d946ef' : '#d97706'
+                    }
+                  ]}
+                  theme={theme}
+                />
+              </div>
+            </div>
+
+            {/* Compare nationality groupings - Moved here */}
             <div
               className={`p-6 rounded-2xl border ${
                 isMinimal
@@ -772,46 +904,6 @@ export default function App() {
                       label: 'عام 2025م',
                       data: [123542, 120782, 219568, 69005],
                       color: isMinimal ? '#2563eb' : isPulse ? '#f72585' : '#c9a84c'
-                    }
-                  ]}
-                  theme={theme}
-                />
-              </div>
-            </div>
-
-            {/* Geographic structure per Wilayat - Enlarge Chart to full width */}
-            <div
-              className={`p-6 rounded-2xl border ${
-                isMinimal
-                  ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
-                  : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
-              }`}
-            >
-              <div className="flex justify-between items-center mb-3">
-                <h3 className={`text-base font-bold opacity-85 text-right ${
-                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
-                }`}>
-                  المواطنون والوافدون حسب كل ولاية (2024 م)
-                </h3>
-                <span className="text-xs opacity-60 font-mono">تفصيل جغرافي لجميع الولايات</span>
-              </div>
-              <p className={`text-xs mb-4 text-right ${isMinimal ? 'text-gray-500' : 'opacity-75'}`}>
-                مستويات التركز السكاني وقدرة جذب واستيعاب العمالة والوافدين بين الحضر والأطراف
-              </p>
-              <div className="h-[430px] w-full">
-                <GroupedBarChart
-                  height={430}
-                  labels={WILAYAS_AR}
-                  datasets={[
-                    {
-                      label: 'المواطنون العمانيون',
-                      data: WILAYAS_DATA_24.map(w => w.omani.both),
-                      color: isMinimal ? '#2563eb' : isPulse ? '#00b4d8' : '#3b82f6'
-                    },
-                    {
-                      label: 'الوافدون (غير العمانيين)',
-                      data: WILAYAS_DATA_24.map(w => w.nonOmani.both),
-                      color: isMinimal ? '#f43f5e' : isPulse ? '#ff007f' : '#f59e0b'
                     }
                   ]}
                   theme={theme}
@@ -888,7 +980,7 @@ export default function App() {
                   <h3 className={`text-base font-bold opacity-85 ${
                     isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
                   }`}>
-                    نسبة الوافدين الكلية من إجمالي تكوين كل ولاية لعام (2024 م)
+                    نسبة الوافدين من إجمالي السكان في الولاية لعام (2024 م)
                   </h3>
                   <p className={`text-xs mt-1 ${isMinimal ? 'text-gray-400' : 'opacity-65'}`}>
                     مؤشر يدل على مدى استقطاب ولايات محافظة ظفار للعمالة الوافدة في عام 2024 م
@@ -935,7 +1027,7 @@ export default function App() {
                   <h3 className={`text-base font-bold opacity-85 ${
                     isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
                   }`}>
-                    نسبة الوافدين الكلية من إجمالي تكوين كل ولاية لعام (2025 م)
+                    نسبة الوافدين من إجمالي السكان في الولاية لعام (2025 م)
                   </h3>
                   <p className={`text-xs mt-1 ${isMinimal ? 'text-gray-400' : 'opacity-65'}`}>
                     مؤشر يدل على مدى استقطاب ولايات محافظة ظفار للعمالة الوافدة في عام 2025 م
@@ -976,107 +1068,146 @@ export default function App() {
         {/* =========================================================================
              PAGE 7: HEALTH PLANNING COHORTS
            ========================================================================= */}
-        {activeTab === 'health' && (
-          <div className="space-y-8 animate-fadeIn">
-            {/* Advanced Geographic Specialization & Target cohorts dashboard */}
-            <HealthPlanningDetails theme={theme} />
+        {activeTab === 'health' && (() => {
+          const currentHealthGroups = selectedHealthYear === '2024' ? HEALTH_GROUPS_24 : HEALTH_GROUPS_25;
+          return (
+            <div className="space-y-8 animate-fadeIn">
+              {/* Advanced Geographic Specialization & Target cohorts dashboard */}
+              <HealthPlanningDetails theme={theme} />
 
-            <div className="border-t border-dashed my-6 border-current border-opacity-10" />
+              <div className="border-t border-dashed my-6 border-current border-opacity-10" />
 
-            <h3 className={`text-md font-bold text-right pt-2 ${
-              isMinimal ? 'text-blue-600 font-sans' : 'text-cyan-400'
-            }`}>
-              🏥 المؤشرات الصحية لعام 2025 م:
-            </h3>
-
-            {/* Grid layout */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pt-1">
-              {HEALTH_GROUPS_25.map((grp) => (
-                <div
-                  key={grp.id}
-                  className={`p-4 rounded-2xl text-center border relative overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-lg flex flex-col justify-between ${
-                    isMinimal
-                      ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/45'
-                      : isPulse
-                        ? 'bg-gradient-to-br from-[#0c1a2e] to-[#0f3460] border-cyan-500/20'
-                        : 'bg-gradient-to-br from-[#1c0d02] to-[#2d1704] border-amber-600/35'
-                  }`}
-                >
-                  <div className="text-2xl mb-1.5">{grp.icon}</div>
-                  <div>
-                    <span className={`text-[12px] md:text-[13px] font-black block leading-tight ${
-                      isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri font-boldScale'
-                    }`}>
-                      {grp.titleAr}
-                    </span>
-                    <span className={`text-[10px] block mt-0.5 ${isMinimal ? 'text-gray-500 font-medium' : 'text-white opacity-75'}`}>
-                      {grp.range}
-                    </span>
-                  </div>
-                  <div className="mt-3">
-                    <span className={`font-mono text-xl md:text-2xl font-black block leading-none ${
-                      isMinimal ? 'text-gray-900' : isPulse ? 'text-white' : 'text-amber-100'
-                    }`}>
-                      {formatNumber(grp.count)}
-                    </span>
-                    <span className={`text-[10.5px] block mt-1 px-1.5 py-0.5 rounded font-semibold truncate leading-none ${
-                      isMinimal ? 'text-emerald-700 bg-emerald-50' : 'text-emerald-400 bg-black/20'
-                    }`}>
-                      {grp.note}
-                    </span>
-                  </div>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
+                <h3 className={`text-md font-bold text-right flex items-center gap-2 ${
+                  isMinimal ? 'text-blue-600 font-sans' : 'text-cyan-400 font-amiri text-lg'
+                }`}>
+                  <span>🏥 المؤشرات الصحية والمجموعات المستهدفة لعام {selectedHealthYear} م:</span>
+                </h3>
+                
+                <div className="flex justify-end gap-1.5">
+                  <button
+                    onClick={() => setSelectedHealthYear('2024')}
+                    className={`px-4 py-1.5 text-xs font-bold rounded-xl transition-all duration-300 cursor-pointer ${
+                      selectedHealthYear === '2024'
+                        ? isMinimal 
+                          ? 'bg-blue-600 text-white shadow-md shadow-blue-100'
+                          : 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                        : isMinimal
+                          ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          : 'bg-slate-800/80 text-gray-300 hover:bg-slate-700/80'
+                    }`}
+                  >
+                    عام 2024 م
+                  </button>
+                  <button
+                    onClick={() => setSelectedHealthYear('2025')}
+                    className={`px-4 py-1.5 text-xs font-bold rounded-xl transition-all duration-300 cursor-pointer ${
+                      selectedHealthYear === '2025'
+                        ? isMinimal 
+                          ? 'bg-blue-600 text-white shadow-md shadow-blue-100'
+                          : 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                        : isMinimal
+                          ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          : 'bg-slate-800/80 text-gray-300 hover:bg-slate-700/80'
+                    }`}
+                  >
+                    عام 2025 م
+                  </button>
                 </div>
-              ))}
-            </div>
+              </div>
 
-            {/* Unified 2025 Health Demographics Panel - No page scroll needed */}
-            <div
-              className={`p-5 rounded-2xl border ${
-                isMinimal
-                  ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
-                  : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
-              }`}
-            >
-              <h3 className={`text-sm font-bold opacity-85 mb-5 text-right flex items-center gap-1.5 ${
-                isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
-              }`}>
-                <Heart className={`w-4.5 h-4.5 text-pink-500 ${isMinimal ? '' : 'animate-pulse'}`} />
-                <span>التقرير البياني الموحد: الفئات العمرية مصنفة والنسبة الهيكلية الكلية المستفيدة (لعام 2025م):</span>
-              </h3>
+              {/* Grid layout */}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pt-1">
+                {currentHealthGroups.map((grp) => (
+                  <div
+                    key={grp.id}
+                    className={`p-4 rounded-2xl text-center border relative overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-lg flex flex-col justify-between ${
+                      isMinimal
+                        ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/45'
+                        : isPulse
+                          ? 'bg-gradient-to-br from-[#0c1a2e]/90 to-[#0f3460]/90 border-cyan-500/20'
+                          : 'bg-gradient-to-br from-[#1c0d02]/90 to-[#2d1704]/90 border-amber-600/35'
+                    }`}
+                  >
+                    <div className="text-2xl mb-1.5">{grp.icon}</div>
+                    <div>
+                      <span className={`text-[12px] md:text-[13px] font-black block leading-tight ${
+                        isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri font-boldScale'
+                      }`}>
+                        {grp.titleAr}
+                      </span>
+                      <span className={`text-[10px] block mt-0.5 ${isMinimal ? 'text-gray-500 font-medium' : 'text-white opacity-75'}`}>
+                        {grp.range}
+                      </span>
+                    </div>
+                    <div className="mt-3">
+                      <span className={`font-mono text-xl md:text-2xl font-black block leading-none ${
+                        isMinimal ? 'text-gray-900' : isPulse ? 'text-white' : 'text-amber-100'
+                      }`}>
+                        {formatNumber(grp.count)}
+                      </span>
+                      <span className={`text-[10.5px] block mt-1 px-1.5 py-0.5 rounded font-semibold truncate leading-none ${
+                        isMinimal ? 'text-emerald-700 bg-emerald-50' : 'text-emerald-400 bg-black/20'
+                      }`}>
+                        {grp.note}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                {/* Horizontal Bar Chart (Col-span 7) */}
-                <div className="lg:col-span-7">
-                  <span className="text-[11px] opacity-70 font-bold mb-3 block text-right border-b border-dashed border-current border-opacity-10 pb-1.5">أعداد الفئات العمرية المستهدفة (2025م):</span>
-                  <HorizontalBarChart
-                    labels={HEALTH_GROUPS_25.map(g => g.titleAr.split('(')[0].trim())}
-                    data={HEALTH_GROUPS_25.map(g => g.count)}
-                    colors={isMinimal ? ['#3b82f6', '#ec4899', '#10b981', '#f59e0b', '#a855f7', '#14b8a6'] : ['#00b4d8', '#f72585', '#06d6a0', '#ffd166', '#a29bfe', '#74b9ff']}
-                    height={250}
-                    theme={theme}
-                  />
-                </div>
+              {/* Unified Health Demographics Panel - No page scroll needed */}
+              <div
+                className={`p-5 rounded-2xl border ${
+                  isMinimal
+                    ? 'bg-white border-gray-100 shadow-sm text-gray-900 shadow-gray-100/40'
+                    : isPulse ? 'bg-[#0c1a2e]/60 border-cyan-500/15' : 'bg-[#1c0d02]/60 border-amber-600/25'
+                }`}
+              >
+                <h3 className={`text-sm font-bold opacity-85 mb-5 text-right flex items-center gap-1.5 ${
+                  isMinimal ? 'text-blue-600 font-sans' : isPulse ? 'text-cyan-400' : 'text-amber-500 font-amiri'
+                }`}>
+                  <Heart className={`w-4.5 h-4.5 text-pink-500 ${isMinimal ? '' : 'animate-pulse'}`} />
+                  <span>التقرير البياني الموحد: الفئات العمرية مصنفة والنسبة الهيكلية الكلية المستفيدة (لعام {selectedHealthYear}م):</span>
+                </h3>
 
-                {/* Doughnut Chart (Col-span 5) */}
-                <div className="lg:col-span-12 xl:col-span-5 border-t lg:border-t-0 lg:border-r border-dashed border-current border-opacity-10 pt-4 lg:pt-0 pr-0 lg:pr-6">
-                  <span className="text-[11px] opacity-70 font-bold mb-3 block text-right border-b border-dashed border-current border-opacity-10 pb-1.5">مساهمة النسبة الهيكلية للفئات الكلية:</span>
-                  <DoughnutChart
-                    data={HEALTH_GROUPS_25.map((g) => ({
-                      label: g.titleAr.split('(')[0].trim(),
-                      value: g.count,
-                      color: isMinimal
-                        ? (g.id === 'infants' ? '#3b82f6' : g.id === 'under5' ? '#ec4899' : g.id === 'students' ? '#10b981' : g.id === 'reproductive' ? '#f59e0b' : g.id === 'older' ? '#a855f7' : '#14b8a6')
-                        : (g.id === 'infants' ? '#00b4d8' : g.id === 'under5' ? '#f72585' : g.id === 'students' ? '#06d6a0' : g.id === 'reproductive' ? '#ffd166' : g.id === 'older' ? '#e040fb' : '#64ffda')
-                    }))}
-                    innerLabel="الفئات المستفيدة"
-                    innerValue="262,285 نسمة"
-                    theme={theme}
-                  />
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                  {/* Horizontal Bar Chart (Col-span 7) */}
+                  <div className="lg:col-span-12 xl:col-span-7">
+                    <span className="text-[11px] opacity-70 font-bold mb-3 block text-right border-b border-dashed border-current border-opacity-10 pb-1.5">أعداد الفئات العمرية المستهدفة ({selectedHealthYear}م):</span>
+                    <HorizontalBarChart
+                      labels={currentHealthGroups.map(g => g.titleAr.split('(')[0].trim())}
+                      data={currentHealthGroups.map(g => g.count)}
+                      colors={isMinimal ? ['#3b82f6', '#ec4899', '#10b981', '#f59e0b', '#a855f7', '#14b8a6'] : ['#00b4d8', '#f72585', '#06d6a0', '#ffd166', '#a29bfe', '#74b9ff']}
+                      height={280}
+                      theme={theme}
+                    />
+                  </div>
+
+                  {/* Doughnut Chart (Col-span 5) */}
+                  <div className="lg:col-span-12 xl:col-span-5 border-t lg:border-t-0 lg:border-r border-dashed border-current border-opacity-10 pt-4 lg:pt-0 pr-0 lg:pr-6">
+                    <span className="text-[11px] opacity-70 font-bold mb-3 block text-right border-b border-dashed border-current border-opacity-10 pb-1.5">مساهمة النسبة الهيكلية للفئات الكلية لعام ({selectedHealthYear}م):</span>
+                    <div className="min-h-[290px] py-1 flex items-center justify-center">
+                      <DoughnutChart
+                        size={240}
+                        data={currentHealthGroups.map((g) => ({
+                          label: g.titleAr.split('(')[0].trim(),
+                          value: g.count,
+                          color: isMinimal
+                            ? (g.id === 'infants' ? '#3b82f6' : g.id === 'under5' ? '#ec4899' : g.id === 'students' ? '#10b981' : g.id === 'reproductive' ? '#f59e0b' : g.id === 'older' ? '#a855f7' : '#14b8a6')
+                            : (g.id === 'infants' ? '#00b4d8' : g.id === 'under5' ? '#f72585' : g.id === 'students' ? '#06d6a0' : g.id === 'reproductive' ? '#ffd166' : g.id === 'older' ? '#e040fb' : '#64ffda')
+                        }))}
+                        innerLabel="الفئات المستفيدة"
+                        innerValue={selectedHealthYear === '2024' ? "253,042 نسمة" : "262,285 نسمة"}
+                        theme={theme}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
       </main>
 

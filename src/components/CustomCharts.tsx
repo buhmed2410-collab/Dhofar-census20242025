@@ -313,30 +313,14 @@ export const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, height = 200
 
           {/* Dynamic Fill Color Circle representing percentage on selection/click */}
           {activeIdx !== null && (() => {
-            const pctVal = (data[activeIdx].value / (total || 1)) * 100;
-            const itemLabel = data[activeIdx].label;
-            const isMale = itemLabel.includes('ذكور') || itemLabel.includes('الذكور');
-            
-            // Choose the aesthetic color based on gender & value percentage
-            let fillCol = 'transparent';
-            if (isMale) {
-              // Males (e.g. 64% - 66%)
-              fillCol = isMinimal 
-                ? `rgba(37, 99, 235, ${0.04 + (pctVal / 500)})` 
-                : `rgba(0, 229, 255, ${0.08 + (pctVal / 400)})`;
-            } else {
-              // Females (e.g. 34% - 36%)
-              fillCol = isMinimal 
-                ? `rgba(219, 39, 119, ${0.04 + (pctVal / 500)})` 
-                : `rgba(255, 0, 127, ${0.08 + (pctVal / 400)})`;
-            }
-
+            const baseColor = data[activeIdx].color || defaultColors[activeIdx % defaultColors.length];
             return (
               <circle
                 cx={center}
                 cy={center}
                 r={radius - strokeWidth / 2}
-                fill={fillCol}
+                fill={baseColor}
+                fillOpacity={isMinimal ? 0.05 : 0.12}
                 className="transition-all duration-500 ease-out animate-pulse"
                 style={{
                   filter: isMinimal ? 'none' : 'blur(4px)',
@@ -353,7 +337,6 @@ export const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, height = 200
             currentOffset += strokeLength;
 
             const color = item.color || defaultColors[idx % defaultColors.length];
-            const isSelected = activeIdx === idx;
 
             return (
               <circle
@@ -363,21 +346,49 @@ export const DoughnutChart: React.FC<DoughnutChartProps> = ({ data, height = 200
                 r={radius}
                 fill="transparent"
                 stroke={color}
-                strokeWidth={isSelected ? strokeWidth + 5 : strokeWidth}
+                strokeWidth={strokeWidth}
                 strokeDasharray={`${strokeLength} ${circumference}`}
                 strokeDashoffset={strokeOffset}
                 transform={`rotate(-90 ${center} ${center})`}
-                className="transition-all duration-300 cursor-pointer origin-center"
-                style={{ 
-                  strokeLinecap: 'butt',
-                  filter: isSelected ? (isMinimal ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' : `drop-shadow(0 0 6px ${color})`) : 'none'
-                }}
+                className="transition-all duration-300 cursor-pointer origin-center hover:opacity-90"
                 onMouseEnter={() => setActiveIndex(idx)}
                 onMouseLeave={() => setActiveIndex(null)}
                 onClick={() => setClickedIndex(clickedIndex === idx ? null : idx)}
               />
             );
           })}
+
+          {/* Active Overlay: Renders on top of all segments to prevent clipping/overlapping cuts */}
+          {activeIdx !== null && (() => {
+            let activeOffset = 0;
+            for (let i = 0; i < activeIdx; i++) {
+              activeOffset += (data[i].value / (total || 1)) * circumference;
+            }
+            const activeItem = data[activeIdx];
+            const activePct = activeItem.value / (total || 1);
+            const activeStrokeLength = activePct * circumference;
+            const activeStrokeOffset = circumference - activeOffset;
+            const activeColor = activeItem.color || defaultColors[activeIdx % defaultColors.length];
+
+            return (
+              <circle
+                cx={center}
+                cy={center}
+                r={radius}
+                fill="transparent"
+                stroke={activeColor}
+                strokeWidth={strokeWidth + 4}
+                strokeDasharray={`${activeStrokeLength} ${circumference}`}
+                strokeDashoffset={activeStrokeOffset}
+                transform={`rotate(-90 ${center} ${center})`}
+                style={{ 
+                  filter: isMinimal ? 'drop-shadow(0 4px 6px rgba(0,0,0,0.18))' : `drop-shadow(0 0 10px ${activeColor})`,
+                  pointerEvents: 'none'
+                }}
+                className="origin-center transition-all duration-300 scale-[1.01]"
+              />
+            );
+          })()}
         </svg>
 
         {/* Center Labels */}

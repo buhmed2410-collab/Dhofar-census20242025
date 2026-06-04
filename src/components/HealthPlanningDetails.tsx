@@ -130,7 +130,7 @@ export const HealthPlanningDetails: React.FC<HealthPlanningDetailsProps> = ({ th
               isMinimal ? 'text-blue-600 font-sans' : 'text-cyan-400'
             }`}>
               <Users className="w-5 h-5 text-pink-500 shrink-0" />
-              <span>لوحة توزيع الفئات العمرية الحرجة للتخطيط الصحي والتطعيم</span>
+              <span>لوحة توزيع الفئات العمرية للتخطيط الصحي والتطعيم</span>
             </h3>
             <p className="text-[11px] opacity-75 mt-1">
               عزل وحصر مجموعات ديموغرافية حيوية متخصصة من الهرم السكاني الكلي، لمتابعة نمو تكلفتها ومعدلات الاستهداف وتوزيع الموارد الطبية.
@@ -256,15 +256,17 @@ export const HealthPlanningDetails: React.FC<HealthPlanningDetailsProps> = ({ th
           <div className="lg:col-span-7 flex flex-col justify-between">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="text-sm font-bold text-cyan-400">ترتيب الولايات حسب حجم الفئة الحرجة المحددة ومستواها:</h4>
+                <h4 className={`text-sm font-bold ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>
+                  ترتيب الولايات حسب حجم الفئة المحددة ومستواها:
+                </h4>
                 <span className="text-[10px] font-mono opacity-65 flex items-center gap-1">
-                  <Info className="w-3 h-3 text-cyan-400" />
+                  <Info className={`w-3 h-3 ${isMinimal ? 'text-blue-500' : 'text-cyan-400'}`} />
                   تفاصيل المجموعات الفرعية للولايات
                 </span>
               </div>
 
               {/* Rank Items Lists */}
-              <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1 hide-scrollbar">
+              <div className="space-y-2.5">
                 {activeCohortList.map((item, idx) => {
                   const dataOM25 = EXACT_OMANI_25_BY_WILAYA[item.name] || [];
                   const dataNOM25 = EXACT_NON_OMANI_25_BY_WILAYA[item.name] || [];
@@ -291,26 +293,35 @@ export const HealthPlanningDetails: React.FC<HealthPlanningDetailsProps> = ({ th
                   const omaniPctOfCohort = (activeOmani / item.count) * 100;
 
                   return (
-                    <div key={item.name} className="space-y-2 p-2.5 rounded-xl border border-white/5 bg-slate-900/40">
+                    <div
+                      key={item.name}
+                      className={`space-y-2 p-2.5 rounded-xl border transition-all ${
+                        isMinimal
+                          ? 'bg-slate-50 border-slate-200/60 shadow-sm text-gray-900'
+                          : 'border-white/5 bg-slate-950/60 hover:bg-slate-900/60'
+                      }`}
+                    >
                       {/* Name rank and count indicator */}
                       <div className="flex justify-between items-center text-sm">
                         <div className="flex items-center gap-2 font-bold">
                           <span className={`text-xs w-6 h-6 flex items-center justify-center rounded-full font-mono font-bold ${
-                            isMinimal ? 'bg-gray-100 text-gray-700' : 'bg-cyan-500/20 text-cyan-300'
+                            isMinimal ? 'bg-gray-200/80 text-gray-800' : 'bg-cyan-500/20 text-cyan-300'
                           }`}>{idx + 1}</span>
-                          <span className={isMinimal ? 'text-gray-900' : 'text-white text-md font-extrabold'}>{item.name}</span>
-                          <span className="text-[11px] opacity-75 font-semibold text-gray-400">({item.pctOfWil.toFixed(1)}% من سكان البالغ الكلي)</span>
+                          <span className={isMinimal ? 'text-gray-900 font-extrabold' : 'text-white text-md font-extrabold'}>{item.name}</span>
+                          <span className={`text-[11px] font-semibold ${isMinimal ? 'text-gray-500' : 'text-gray-400'} opacity-75`}>
+                            ({item.pctOfWil.toFixed(1)}% من سكان البالغ الكلي)
+                          </span>
                         </div>
                         <div className="font-mono text-sm font-black text-right">
-                          <span className={isMinimal ? 'text-blue-600' : 'text-emerald-400 text-md font-black'}>{formatNumber(item.count)}</span>
-                          <span className="text-[11px] font-normal opacity-70 mr-1">نسمة</span>
+                          <span className={isMinimal ? 'text-blue-600 font-bold' : 'text-emerald-400 text-md font-black'}>{formatNumber(item.count)}</span>
+                          <span className={`text-[11px] font-normal ${isMinimal ? 'text-gray-500' : 'opacity-70'} mr-1`}>نسمة</span>
                         </div>
                       </div>
 
                       {/* Bar representations showing omani citizens slice vs non-omani in current cohort */}
                       <div className="flex items-center gap-4">
                         <div className={`flex-1 h-4 rounded-md overflow-hidden flex border ${
-                          isMinimal ? 'bg-gray-105 border-gray-200/50' : 'bg-slate-800/40 border-white/10'
+                          isMinimal ? 'bg-gray-200/50 border-gray-300/40' : 'bg-slate-800/40 border-white/10'
                         }`}>
                           <div 
                             style={{ width: `${omaniPctOfCohort}%` }} 
@@ -325,8 +336,10 @@ export const HealthPlanningDetails: React.FC<HealthPlanningDetailsProps> = ({ th
                         </div>
 
                         {/* Breakdown tag */}
-                        <span className="text-[10px] font-mono shrink-0 w-[130px] text-left opacity-95">
-                          عماني: <span className="text-emerald-400 font-extrabold">{formatNumber(activeOmani)}</span> <span className="opacity-40">|</span> وافد: <span className="text-amber-500 font-extrabold">{formatNumber(activeNonOmani)}</span>
+                        <span className={`text-[10px] font-mono shrink-0 w-[145px] text-left opacity-95 ${
+                          isMinimal ? 'text-gray-700' : 'text-gray-300'
+                        }`}>
+                          عماني: <span className={isMinimal ? 'text-emerald-700 font-extrabold' : 'text-emerald-400 font-extrabold'}>{formatNumber(activeOmani)}</span> <span className="opacity-40">|</span> وافد: <span className={isMinimal ? 'text-amber-700 font-extrabold' : 'text-amber-600 font-extrabold'}>{formatNumber(activeNonOmani)}</span>
                         </span>
                       </div>
                     </div>
