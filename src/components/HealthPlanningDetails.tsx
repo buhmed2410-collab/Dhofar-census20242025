@@ -173,7 +173,7 @@ export const HealthPlanningDetails: React.FC<HealthPlanningDetailsProps> = ({ th
                 <div className="flex items-center gap-2.5">
                   <span className="text-3xl leading-none">{activeCohortData.icon}</span>
                   <div>
-                    <h4 className="text-sm font-black leading-tight text-white mb-0.5">{activeCohortData.title}</h4>
+                    <h4 className={`text-sm font-black leading-tight mb-0.5 ${isMinimal ? 'text-slate-900' : 'text-white'}`}>{activeCohortData.title}</h4>
                     <span className="text-[10px] opacity-70 block">{activeCohortData.range}</span>
                   </div>
                 </div>
@@ -200,13 +200,13 @@ export const HealthPlanningDetails: React.FC<HealthPlanningDetailsProps> = ({ th
                 </div>
                 <div>
                   <span className="text-[10.5px] block opacity-60">التعداد في منتصف 2025م</span>
-                  <span className="font-mono text-xl font-black text-cyan-400 block mt-0.5">{formatNumber(activeCohortData.count25)} <span className="text-[10px] opacity-75">نسمة طبية</span></span>
+                  <span className={`font-mono text-xl font-black block mt-0.5 ${isMinimal ? 'text-blue-600' : 'text-cyan-400'}`}>{formatNumber(activeCohortData.count25)} <span className="text-[10px] opacity-75">نسمة طبية</span></span>
                 </div>
               </div>
 
               {/* Sparkline Visualisation representation (custom SVG) */}
               <div className="mb-5">
-                <span className="text-[12px] block opacity-85 mb-2.5 font-bold text-cyan-200">نمذجة منحنى الطلب الحرج (نسمة لعامي 2024 - 2025):</span>
+                <span className={`text-[12px] block mb-2.5 font-bold ${isMinimal ? 'text-slate-800' : 'text-cyan-300'}`}>نمذجة منحنى الطلب (نسمة لعامي 2024 - 2025):</span>
                 <div className={`h-[85px] rounded-xl p-4 flex items-center justify-between border ${
                   isMinimal ? 'bg-white border-gray-200 shadow-sm' : 'bg-black/45 border-cyan-500/25'
                 }`}>
